@@ -38,17 +38,16 @@ public class CreateOrderRequest {
 //    @NotEmpty(message="Số điện thoại rỗng")
 //    private String phone;
 
-    private String note;
+    private String username;
 
     @NotNull(message="Tên địa chỉ rỗng")
     @NotEmpty(message="Tên địa chỉ rỗng")
     private String address;
 
-    private String username;
-    private int state;
+//    private int state;
+    private String note;
 
 //    private long totalPrice;
-
     private List<CreateOrderDetailRequest> orderDetails;
 
 }

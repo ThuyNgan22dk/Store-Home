@@ -104,9 +104,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDetail getOrderDetail(Cart cart,OrderDetail orderDetail, CreateOrderDetailRequest rq){
-        Promotion promotion = promotionService.findCode(rq.getPromotionCode());
-        System.out.println(promotion);
-        if (promotion != null) {
+        String promotionCode = rq.getPromotionCode();
+        if (promotionCode != null) {
+            Promotion promotion = promotionService.findCode(rq.getPromotionCode());
+            System.out.println(promotion);
             orderDetail.setSubTotal(cart.getPrice() * cart.getQuantity() * promotion.getPercent());
             promotion.setQuantity(promotion.getQuantity() - 1);
         }else {
