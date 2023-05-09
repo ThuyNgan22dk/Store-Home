@@ -45,6 +45,7 @@ public class CreateOrderRequest {
     private String address;
 
     private String username;
+    private int state;
 
 //    private long totalPrice;
 

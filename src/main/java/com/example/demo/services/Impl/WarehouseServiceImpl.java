@@ -57,11 +57,5 @@ public class WarehouseServiceImpl implements WarehouseServise {
         warehouse.setExpiry(request.getExpiry());
         warehouse.setQuantity(request.getQuantity());
         warehouseRepository.save(warehouse);
-//        if (product.getQuantity() >= request.getQuantity()) {
-//
-//            return true;
-//        } else {
-//            return false;
-//        }
     }
 }

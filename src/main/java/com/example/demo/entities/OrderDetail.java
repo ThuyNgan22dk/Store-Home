@@ -14,9 +14,12 @@ public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private long price;
-    private int quantity;
+
+    @ManyToOne
+    @JoinColumn(name ="cart_id")
+    private Cart cart;
+
+    private String promotionCode;
     private long subTotal;
     @ManyToOne
     @JoinColumn(name ="order_id")

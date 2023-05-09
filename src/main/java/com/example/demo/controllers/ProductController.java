@@ -2,7 +2,6 @@ package com.example.demo.controllers;
 
 import java.util.List;
 
-import com.example.demo.entities.Promotion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -71,6 +70,7 @@ public class ProductController {
     @GetMapping("/range")
     @Operation(summary="Lấy ra danh sách sản phẩm ở các mức giá từ min đến max")
     public ResponseEntity<List<Product>> getListProductByPriceRange(@RequestParam("id") long id,@RequestParam("min") int min, @RequestParam("max") int max){
+        max*=1000;
         List<Product> list = productService.getListByPriceRange(id, min, max);
         return ResponseEntity.ok(list);
     }

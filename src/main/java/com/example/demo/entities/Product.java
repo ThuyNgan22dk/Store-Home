@@ -33,9 +33,9 @@ public class Product {
     private long price;
     private boolean enabled;
     //hạn sử dụng
-//    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
-//    @Column(name = "date_expiry")
-//    private String expiry;
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @Column(name = "date_expiry")
+    private String expiry;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @Column(name = "date_created")

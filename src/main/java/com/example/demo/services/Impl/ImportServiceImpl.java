@@ -94,6 +94,7 @@ public class ImportServiceImpl implements ImportService {
         importDetail.setImportGoods(importGoods);
         Product product = productRepository.findByProductname(rq.getName()).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + rq.getName()));
         product.setPrice(rq.getPrice() + 20000L);
+        product.setExpiry(rq.getExpiry());
         if (product.getQuantity() <= 0) {
             product.setInventoryStatus("OUTOFSTOCK");
         } else if (product.getQuantity() < 10) {

@@ -28,9 +28,8 @@ public class ImportController {
     }
 
     @GetMapping("/importDetail")
-    @Operation(summary="Lấy ra danh sách chi tiết các sản phẩm trong đơn mua hàng")
     public ResponseEntity<List<ImportDetail>> getListDetailNull(){
-//        List<ImportDetail> list = importService.getListDetail(ig_id);
+
         return null;
     }
 
