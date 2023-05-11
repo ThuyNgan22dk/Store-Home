@@ -11,6 +11,7 @@ public interface WarehouseServise {
     void revenueStatistics();
 
     boolean addOrder(ChangeWarehouseRequest request);
+//    void deleteWasehouse(long id);
 
     void addImport(ChangeWarehouseRequest request);
 }

@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import java.util.List;
 
+import com.example.demo.entities.ImportDetail;
 import com.example.demo.entities.OrderDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,18 @@ public class OrderController {
         List<Order> list = orderService.getOrderByUser(username);
         return ResponseEntity.ok(list);
     }
+
+    @GetMapping("/orderDetail")
+    public ResponseEntity<List<OrderDetail>> getListDetailNull(){
+        return null;
+    }
+
+//    @GetMapping("/importDetail/{ig_id}")
+//    @Operation(summary="Lấy ra danh sách chi tiết các sản phẩm trong đơn mua hàng")
+//    public ResponseEntity<List<OrderDetail>> getListDetail(@PathVariable Long ig_id){
+//        List<OrderDetail> list = orderService.getOrderDetail(ig_id);
+//        return ResponseEntity.ok(list);
+//    }
 
     @PutMapping("/{id}/{state}")
     @Operation(summary="Đặt hàng sản phẩm")

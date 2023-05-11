@@ -27,7 +27,10 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     List<Product> getListProductByCategory(long id);
 
     @Query(value = "Select * from Product where category_id = :id and price between :min and :max",nativeQuery = true)
-    List<Product> getListProductByPriceRange(long id,int min,int max);
+    List<Product> getListProductByPriceRangeCategoryId(long id,int min,int max);
+
+    @Query(value = "Select * from Product where price between :min and :max",nativeQuery = true)
+    List<Product> getListProductByPriceRange(int min,int max);
 
     @Query(value= "Select p from Product p where p.productname like %:keyword% order by id desc")
     List<Product> searchProduct(String keyword);

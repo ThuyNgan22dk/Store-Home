@@ -63,9 +63,13 @@ public class OrderServiceImpl implements OrderService {
             if (warehouseServise.addOrder(changeWarehouseRequest)){
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail = getOrderDetail(cart, orderDetail, rq);
+                orderDetail.setCart(cart);
                 orderDetail.setOrder(order);
                 totalPrice += orderDetail.getSubTotal();
                 orderDetailRepository.save(orderDetail);
+                cartRepository.deleteById(rq.getCartId());
+            } else {
+                System.out.println("Khong the dat hang");
             }
         }
         order.setTotalPrice(totalPrice);
@@ -102,10 +106,23 @@ public class OrderServiceImpl implements OrderService {
         return orderDetailRepository.getListByOrderId(order_id);
     }
 
+//    @Override
+//    public List<OrderDetail> getOrderDetailByIdOrder(Long id){
+//        List<OrderDetail> detailList = orderDetailRepository.getListByOrderId(id);
+////        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + ig_id));;
+////        long totalPrice = 0;
+////        for(OrderDetail rq: detailList){
+////            totalPrice += rq.getSubTotal();
+////        }
+////        importGoods.setTotalPrice(totalPrice);
+////        orderRepository.save(order);
+//        return detailList;
+////        return null;
+//    }
+
     @Override
     public OrderDetail getOrderDetail(Cart cart,OrderDetail orderDetail, CreateOrderDetailRequest rq){
-        String promotionCode = rq.getPromotionCode();
-        if (promotionCode != null) {
+        if (rq.getPromotionCode() != null) {
             Promotion promotion = promotionService.findCode(rq.getPromotionCode());
             System.out.println(promotion);
             orderDetail.setSubTotal(cart.getPrice() * cart.getQuantity() * promotion.getPercent());

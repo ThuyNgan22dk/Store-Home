@@ -46,6 +46,7 @@ public class CartServiceImpl implements CartService {
     public Cart updateCart(long id, int quantity) {
         Cart cart = cartRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Cart With Id: " + id));
         cart.setQuantity(quantity);
+        cart.setTotal(cart.getPrice() * cart.getQuantity());
         cartRepository.save(cart);
         return cart;
     }

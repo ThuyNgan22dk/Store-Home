@@ -15,7 +15,7 @@ public interface OrderService {
 
     List<Order> getOrderByUser(String username);
 
-//    List<OrderDetail> findAllOrderDetail();
+//    List<OrderDetail> getOrderDetailByIdOrder(Long id);
     void setStateOrder(Long id, int stateOrder);
 
     OrderDetail getOrderDetail(Cart cart, OrderDetail orderDetail, CreateOrderDetailRequest rq);

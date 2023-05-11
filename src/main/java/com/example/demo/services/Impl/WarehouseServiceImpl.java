@@ -38,7 +38,16 @@ public class WarehouseServiceImpl implements WarehouseServise {
         Product product = productRepository.findByProductname(request.getProductname()).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + request.getProductname()));
         if (product.getQuantity() >= request.getQuantity()) {
             product.setQuantity(product.getQuantity() - request.getQuantity());
-            warehouse.setProduct(product);
+            if (product.getQuantity() <= 0) {
+                product.setInventoryStatus("OUTOFSTOCK");
+            } else if (product.getQuantity() < 10) {
+                product.setInventoryStatus("LOWSTOCK");
+            } else {
+                product.setInventoryStatus("INSTOCK");
+            }
+//            warehouse.setProduct(product);
+            System.out.println(product.getQuantity());
+            System.out.println(request.getQuantity());
             warehouse.setExpiry(request.getExpiry());
             warehouse.setQuantity(request.getQuantity());
             warehouseRepository.save(warehouse);
@@ -48,10 +57,15 @@ public class WarehouseServiceImpl implements WarehouseServise {
         }
     }
 
+//    @Override
+//    public void deleteWasehouse(long id){
+//        warehouseRepository.deleteById(id);
+//    }
+
     @Override
     public void addImport(ChangeWarehouseRequest request) {
         Warehouse warehouse = new Warehouse();
-        Product product = productRepository.findByProductname(request.getProductname()).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + request.getProductname()));
+        Product product = productRepository.findByProductname(request.getProductname()).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + request.getProductname()));
         product.setQuantity(product.getQuantity() + request.getQuantity());
         warehouse.setProduct(product);
         warehouse.setExpiry(request.getExpiry());

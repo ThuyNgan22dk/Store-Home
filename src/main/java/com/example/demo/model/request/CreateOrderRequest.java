@@ -37,14 +37,15 @@ public class CreateOrderRequest {
 //    @NotNull(message="Số điện thoại rỗng")
 //    @NotEmpty(message="Số điện thoại rỗng")
 //    private String phone;
-
+    @NotNull(message="Username rỗng")
+    @NotEmpty(message="Username rỗng")
     private String username;
 
     @NotNull(message="Tên địa chỉ rỗng")
     @NotEmpty(message="Tên địa chỉ rỗng")
     private String address;
 
-//    private int state;
+//    private String state;
     private String note;
 
 //    private long totalPrice;

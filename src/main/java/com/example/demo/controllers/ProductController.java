@@ -70,7 +70,9 @@ public class ProductController {
     @GetMapping("/range")
     @Operation(summary="Lấy ra danh sách sản phẩm ở các mức giá từ min đến max")
     public ResponseEntity<List<Product>> getListProductByPriceRange(@RequestParam("id") long id,@RequestParam("min") int min, @RequestParam("max") int max){
+        min*=1000;
         max*=1000;
+        System.out.println("min: " + min + " max: " + max);
         List<Product> list = productService.getListByPriceRange(id, min, max);
         return ResponseEntity.ok(list);
     }

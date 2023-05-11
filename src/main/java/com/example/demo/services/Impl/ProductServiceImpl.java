@@ -149,7 +149,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getListByPriceRange(long id,int min, int max){
-        return productRepository.getListProductByPriceRange(id, min, max);
+        if (id == 0) {
+            return productRepository.getListProductByPriceRange(min, max);
+        } else {
+            return productRepository.getListProductByPriceRangeCategoryId(id, min, max);
+        }
     }
 
     @Override
