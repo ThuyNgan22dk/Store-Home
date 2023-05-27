@@ -30,4 +30,6 @@ public class ChangeWarehouseRequest {
     @Schema(description = "Hạn sử dụng sản phẩm",example="yyyy-MM-dd")
     @Size(min=5,max=20,message="Hạn sử dụng sản phẩm từ 5-20 ký tự")
     private String expiry;
+
+    private String typeWarehouse;
 }

@@ -1,6 +1,9 @@
 package com.example.demo.services.Impl;
 
 import java.util.List;
+
+import com.example.demo.entities.User;
+import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,9 @@ import com.example.demo.services.ImageService;
 public class ImageServiceImpl implements ImageService {
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public List<Image> getListImage() {
@@ -30,6 +36,10 @@ public class ImageServiceImpl implements ImageService {
     public Image save(Image image) {
         // TODO Auto-generated method stub
         return imageRepository.save(image);
+    }
+
+    public User saveUser(String username){
+        return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Image not found width id :" + username));
     }
 
     @Override

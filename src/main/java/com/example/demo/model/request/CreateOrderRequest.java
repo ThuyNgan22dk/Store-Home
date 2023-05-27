@@ -1,6 +1,7 @@
 package com.example.demo.model.request;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
@@ -44,7 +45,13 @@ public class CreateOrderRequest {
     @NotEmpty(message="Tên địa chỉ rỗng")
     private String address;
 
+<<<<<<< Updated upstream
 //    private int state;
+=======
+    private String promotionCode;
+//    private Set<Long> states;
+//    private String state;
+>>>>>>> Stashed changes
     private String note;
 
 //    private long totalPrice;

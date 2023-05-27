@@ -38,7 +38,21 @@ public class WarehouseServiceImpl implements WarehouseServise {
         Product product = productRepository.findByProductname(request.getProductname()).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + request.getProductname()));
         if (product.getQuantity() >= request.getQuantity()) {
             product.setQuantity(product.getQuantity() - request.getQuantity());
+<<<<<<< Updated upstream
             warehouse.setProduct(product);
+=======
+            if (product.getQuantity() <= 0) {
+                product.setInventoryStatus("OUTOFSTOCK");
+            } else if (product.getQuantity() < 10) {
+                product.setInventoryStatus("LOWSTOCK");
+            } else {
+                product.setInventoryStatus("INSTOCK");
+            }
+            warehouse.setProduct(product);
+//            System.out.println(product.getQuantity());
+//            System.out.println(request.getQuantity());
+            warehouse.setTypeWarehouse("order");
+>>>>>>> Stashed changes
             warehouse.setExpiry(request.getExpiry());
             warehouse.setQuantity(request.getQuantity());
             warehouseRepository.save(warehouse);
@@ -56,6 +70,7 @@ public class WarehouseServiceImpl implements WarehouseServise {
         warehouse.setProduct(product);
         warehouse.setExpiry(request.getExpiry());
         warehouse.setQuantity(request.getQuantity());
+        warehouse.setTypeWarehouse("import");
         warehouseRepository.save(warehouse);
     }
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import com.example.demo.entities.Cart;
 import com.example.demo.entities.Order;
 import com.example.demo.entities.OrderDetail;
+import com.example.demo.entities.OrderState;
 import com.example.demo.model.request.CreateOrderDetailRequest;
 import com.example.demo.model.request.CreateOrderRequest;
 
@@ -15,10 +16,16 @@ public interface OrderService {
 
     List<Order> getOrderByUser(String username);
 
+<<<<<<< Updated upstream
 //    List<OrderDetail> findAllOrderDetail();
     void setStateOrder(Long id, int stateOrder);
+=======
+//    List<OrderDetail> getOrderDetailByIdOrder(Long id);
+    void setStateOrder(long orderId, int stateNumber);
+>>>>>>> Stashed changes
 
     OrderDetail getOrderDetail(Cart cart, OrderDetail orderDetail, CreateOrderDetailRequest rq);
+    List<OrderState> getListState(Long orderId);
 
     List<OrderDetail> getListByOrderId(Long order_id);
 }

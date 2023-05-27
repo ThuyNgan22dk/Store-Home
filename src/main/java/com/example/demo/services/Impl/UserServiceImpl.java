@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         user.setDateCreated(dtf.format(now));
+        user.setEnabled(true);
         user.setRoles(roles);
         userRepository.save(user);
     }
@@ -105,9 +106,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(long id, UpdateProfileRequest request) {
+    public User updateUser(String username, UpdateProfileRequest request) {
         // TODO Auto-generated method stub
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + id));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + username));
         return getUser(user, request);
     }
 
@@ -131,20 +132,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(long id, ChangePasswordRequest request) {
+    public void changePassword(String username, ChangePasswordRequest request) {
         // TODO Auto-generated method stub
-         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + id));
-         if(!Objects.equals(encoder.encode(request.getOldPassword()), user.getPassword())){
+         User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found User With Id: " + username));
+//         System.out.println(request.getOldPassword() + " , " + encoder.(user.getPassword()));
+         if(!encoder.matches(request.getOldPassword(), user.getPassword())){
            throw new BadRequestException("Old Passrword Not Same");
          }
-         user.setPassword(encoder.encode(request.getNewPassword()));
-         userRepository.save(user);
+         else {
+             user.setPassword(encoder.encode(request.getNewPassword()));
+             userRepository.save(user);
+         }
+    }
+
+    public int gen() {
+        Random r = new Random( System.currentTimeMillis() );
+        return ((1 + r.nextInt(2)) * 100000 + r.nextInt(100000));
     }
 
     @Override
-    public void resetPassword(long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + id));
-        user.setPassword(encoder.encode("123456"));
+    public String resetPassword(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found User With Id: " + username));
+        String code = String.valueOf(gen());
+//        System.out.println(code);
+        user.setPassword(encoder.encode(code));
         userRepository.save(user);
+        return code;
     }
 }

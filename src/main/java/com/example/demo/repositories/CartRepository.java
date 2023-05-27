@@ -12,4 +12,10 @@ import java.util.List;
 public interface CartRepository extends JpaRepository<Cart,Long> {
     @Query(value ="Select * from Cart where user_id = :id order by id desc",nativeQuery = true)
     List<Cart> getCartByUser(long id);
+
+    @Query(value = "SELECT * from Cart where product_id = :productId and user_id = :userId", nativeQuery = true)
+    Cart findProductOnCart(long productId, long userId);
+
+    @Query(value = "SELECT * from Cart where id = :cartId and user_id = :userId", nativeQuery = true)
+    Cart findProductByIdAndUser(long cartId, long userId);
 }

@@ -15,13 +15,13 @@ public interface UserService {
 
     User updateUser(UpdateProfileRequest request);
 
-    User updateUser(long id, UpdateProfileRequest request);
+    User updateUser(String username, UpdateProfileRequest request);
 
     void enableUser(long id);
 
     void deleteUser(long id) ;
 
-    void changePassword(long id, ChangePasswordRequest request);
+    void changePassword(String username, ChangePasswordRequest request);
 
-    void resetPassword(long id);
+    String resetPassword(String username);
 }

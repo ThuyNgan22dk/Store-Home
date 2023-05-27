@@ -1,7 +1,9 @@
 package com.example.demo.entities;
 
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -20,12 +22,17 @@ public class Order {
     private String firstname;
     private String lastname;
     private String address;
-    private long promotionCode;
+    private String promotionCode;
     private String email;
     private String phone;
     private String note;
     private long totalPrice;
-    private String state;
+
+//    @OneToMany(mappedBy="order")
+//    @JoinColumn(name="orderstate_id")
+//    @JsonBackReference
+//    private Set<OrderState> state;
+    private String stating;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @Column(name = "date_created")
@@ -38,6 +45,7 @@ public class Order {
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
+
     @OneToMany(mappedBy="order")
     @JsonBackReference
     private Set<OrderDetail> orderdetails;

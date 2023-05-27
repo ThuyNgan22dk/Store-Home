@@ -23,6 +23,10 @@ public class Cart {
     private String expiry;
     private int quantity;
     private long total;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    @Column(name = "date_deleted")
+    private String dateDeleted;
+//    private boolean checkDelete;
     @ManyToOne
     @JoinColumn(name="product_id")
     private Product product;

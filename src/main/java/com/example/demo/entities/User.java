@@ -50,6 +50,7 @@ public class User {
 
     @OneToMany
     @JoinColumn(name = "history_purchase")
-    @JoinTable(name = "user_order",joinColumns = @JoinColumn(name="user_id"),inverseJoinColumns = @JoinColumn(name="order_id"))
     private Set<Order> orders = new HashSet<>();
+
+
 }

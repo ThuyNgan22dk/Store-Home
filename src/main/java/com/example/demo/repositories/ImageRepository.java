@@ -12,7 +12,7 @@ import com.example.demo.entities.Image;
 @Repository
 public interface ImageRepository extends JpaRepository<Image,Long> {
 
-    @Query(nativeQuery = true, value = "SELECT * FROM image WHERE uploaded_by = ?1")
+    @Query(nativeQuery = true, value = "SELECT * FROM image WHERE uploaded_by = :userId")
     public List<Image> getListImageOfUser(long userId);
 }
 
