@@ -14,28 +14,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.entities.Product;
 import com.example.demo.model.request.CreateProductRequest;
 import com.example.demo.model.response.MessageResponse;
 import com.example.demo.services.ProductService;
-
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/api/product")
 @CrossOrigin(origins = "*",maxAge = 3600)
 public class ProductController {
-
     @Autowired
     private ProductService productService;
-
 
     @GetMapping("/")
     @Operation(summary="Lấy ra danh sách sản phẩm")
     public ResponseEntity<List<Product>> getList(){
         List<Product> list = productService.getList();
+        return ResponseEntity.ok(list);
+    }
 
+    @GetMapping("/foruser")
+    @Operation(summary="Lấy ra danh sách sản phẩm")
+    public ResponseEntity<List<Product>> getListForUser(){
+        List<Product> list = productService.findProductForUser();
         return ResponseEntity.ok(list);
     }
 
@@ -81,7 +83,6 @@ public class ProductController {
     @Operation(summary="Lấy sản phẩm bằng id")
     public ResponseEntity<Product> getProduct(@PathVariable long id){
         Product product = productService.getProduct(id);
-
         return ResponseEntity.ok(product);
     }
 
@@ -96,7 +97,6 @@ public class ProductController {
     @Operation(summary="Tạo mới sản phẩm")
     public ResponseEntity<Product> createProduct(@RequestBody CreateProductRequest request){
         Product product = productService.createProduct(request);
-
         return ResponseEntity.ok(product);
     }
 
@@ -127,7 +127,5 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.ok(new MessageResponse("Xóa sản phảm thành công"));
     }
-
-
 }
 

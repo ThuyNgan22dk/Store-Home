@@ -52,8 +52,4 @@ public class Product {
     @ManyToMany
     @JoinTable(name = "product_image",joinColumns = @JoinColumn(name="product_id"),inverseJoinColumns = @JoinColumn(name="image_id"))
     private Set<Image> images = new HashSet<>();
-
-    @OneToMany(mappedBy="product")
-    @JsonBackReference
-    private Set<Comment> comments;
 }

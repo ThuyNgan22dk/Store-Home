@@ -1,18 +1,14 @@
 package com.example.demo.controllers;
 
 import java.util.List;
-
-import com.example.demo.entities.ImportDetail;
 import com.example.demo.entities.OrderDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import com.example.demo.entities.Order;
 import com.example.demo.model.request.CreateOrderRequest;
 import com.example.demo.model.response.MessageResponse;
 import com.example.demo.services.OrderService;
-
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
@@ -59,7 +55,7 @@ public class OrderController {
     @Operation(summary="Đặt hàng sản phẩm")
     public ResponseEntity<?> setStateOrder(@PathVariable("id") Long id, @PathVariable("state") int state){
         orderService.setStateOrder(id,state);
-        return ResponseEntity.ok(new MessageResponse("Order Placed Successfully!"));
+        return ResponseEntity.ok(new MessageResponse("Successfully!"));
     }
 
     @PostMapping("/create")

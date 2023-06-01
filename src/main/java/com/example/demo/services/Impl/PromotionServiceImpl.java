@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.example.demo.entities.Product;
 import com.example.demo.entities.Promotion;
 import com.example.demo.model.request.CreatePromotionRequest;
 import com.example.demo.repositories.PromotionRepository;
@@ -23,6 +22,8 @@ public class PromotionServiceImpl implements PromotionService {
     private static final String digits = "0123456789";                   // 0-9
     private static final String ALPHA_NUMERIC = alpha + alphaUpperCase + digits;
     private static Random generator = new Random();
+    public DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+    public LocalDateTime now = LocalDateTime.now();
 
     @Autowired
     private PromotionRepository promotionRepository;
@@ -63,7 +64,6 @@ public class PromotionServiceImpl implements PromotionService {
         promotion.setDetail(request.getDetail());
         promotion.setQuantity(request.getQuantity());
         promotion.setPercent(request.getPercent());
-
         StringBuilder code = new StringBuilder();
         for (int i = 0; i < 8; i++) {
             int number = randomNumber(0, ALPHA_NUMERIC.length() - 1);
@@ -71,12 +71,8 @@ public class PromotionServiceImpl implements PromotionService {
             code.append(ch);
         }
         promotion.setCode(code.toString());
-//        System.out.println(code);
         promotion.setEnabled(false);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
         promotion.setDateCreated(dtf.format(now));
-
         promotionRepository.save(promotion);
         return promotion;
     }
@@ -105,8 +101,6 @@ public class PromotionServiceImpl implements PromotionService {
     public void deletePromotion(long id) {
         // TODO Auto-generated method stub
         Promotion promotion = promotionRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + id));
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
         promotion.setDateDeleted(dtf.format(now));
         promotion.setEnabled(false);
         promotionRepository.save(promotion);
@@ -114,7 +108,6 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Override
     public List<Promotion> getListEnabled() {
-        // TODO Auto-generated method stub
         return promotionRepository.findALLByEnabled();
     }
 }

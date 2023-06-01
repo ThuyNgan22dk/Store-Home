@@ -12,6 +12,8 @@ public interface ImportService {
 
     List<ImportGoods> getList();
 
+    long totalAllImport();
+
     List<ImportDetail> getListDetail(Long ig_id);
 
     void createProductImport(CreateImportDetailRequest rq);

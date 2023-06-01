@@ -23,4 +23,5 @@ public class Warehouse {
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     @Column(name = "date_expiry")
     private String expiry;
+    private String typeWarehouse;
 }

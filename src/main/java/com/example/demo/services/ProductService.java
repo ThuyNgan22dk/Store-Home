@@ -2,11 +2,9 @@ package com.example.demo.services;
 import java.util.List;
 
 import com.example.demo.entities.Product;
-import com.example.demo.model.request.CreateImportDetailRequest;
 import com.example.demo.model.request.CreateProductRequest;
 
 public interface ProductService {
-
     List<Product> getList();
 
     List<Product> getListNewst(int number);
@@ -14,6 +12,8 @@ public interface ProductService {
     List<Product> getListByPrice();
 
     List<Product> findRelatedProduct(long id);
+
+    List<Product> findProductForUser();
 
     List<Product> getListProductByCategory(long id);
 

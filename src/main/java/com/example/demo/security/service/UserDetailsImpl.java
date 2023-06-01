@@ -44,8 +44,7 @@ public class UserDetailsImpl implements UserDetails {
             user.getEmail(),
             user.getPassword(), 
             authorities);
-      }
-
+    }
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -92,11 +91,10 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean equals(Object o) {
         if (this == o)
-        return true;
+            return true;
         if (o == null || getClass() != o.getClass())
-        return false;
+            return false;
         UserDetailsImpl user = (UserDetailsImpl) o;
-        return Objects.equals(id, user.id);
+            return Objects.equals(id, user.id);
     }
-    
 }

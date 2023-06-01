@@ -13,10 +13,11 @@ public interface OrderService {
 
     List<Order> getList();
 
+    long totalAllOrder();
+
     List<Order> getOrderByUser(String username);
 
-//    List<OrderDetail> getOrderDetailByIdOrder(Long id);
-    void setStateOrder(Long id, int stateOrder);
+    void setStateOrder(long orderId, int stateNumber);
 
     OrderDetail getOrderDetail(Cart cart, OrderDetail orderDetail, CreateOrderDetailRequest rq);
 

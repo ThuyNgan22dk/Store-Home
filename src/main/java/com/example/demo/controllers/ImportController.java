@@ -29,7 +29,6 @@ public class ImportController {
 
     @GetMapping("/importDetail")
     public ResponseEntity<List<ImportDetail>> getListDetailNull(){
-
         return null;
     }
 

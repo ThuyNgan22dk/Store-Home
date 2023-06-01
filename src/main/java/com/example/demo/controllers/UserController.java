@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -33,6 +32,12 @@ public class UserController {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
+
+//    @PutMapping("uploadImage/{username}/{imageId}")
+//    public ResponseEntity<?> setImageForUser(@PathVariable("username") String username, @PathVariable("imageId") long imageId){
+//        User user = userService.setImageForUser(username,imageId);
+//        return ResponseEntity.ok(user);
+//    }
 
     @PutMapping("/update")
     public ResponseEntity<User> updateProfile(@RequestBody UpdateProfileRequest request){

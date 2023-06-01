@@ -20,7 +20,6 @@ import com.example.demo.services.OrderService;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-
     @Autowired
     private OrderRepository orderRepository;
 
@@ -39,6 +38,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private PromotionService promotionService;
 
+    public DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+    public LocalDateTime now = LocalDateTime.now();
+
     @Override
     public void placeOrder(CreateOrderRequest request) {
         // TODO Auto-generated method stub
@@ -50,11 +52,7 @@ public class OrderServiceImpl implements OrderService {
         order.setPhone(user.getPhone());
         order.setAddress(request.getAddress());
         order.setNote(request.getNote());
-        //Date-time
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
         order.setDateCreated(dtf.format(now));
-
         orderRepository.save(order);
         long totalPrice = 0;
         for(CreateOrderDetailRequest rq: request.getOrderDetails()){
@@ -67,12 +65,24 @@ public class OrderServiceImpl implements OrderService {
                 orderDetail.setOrder(order);
                 totalPrice += orderDetail.getSubTotal();
                 orderDetailRepository.save(orderDetail);
-                cartRepository.deleteById(rq.getCartId());
-            } else {
-                System.out.println("Khong the dat hang");
+                cart.setDateDeleted(dtf.format(now));
+                cartRepository.save(cart);
             }
         }
-        order.setTotalPrice(totalPrice);
+        if (request.getPromotionCode() != null) {
+            Promotion promotion = promotionService.findCode(request.getPromotionCode());
+            order.setPromotionCode(request.getPromotionCode());
+            System.out.println(promotion);
+            order.setTotalPrice(totalPrice * (100 - promotion.getPercent()) / 100);
+            if (promotion.getQuantity() == 1) {
+                promotionService.enablePromotion(promotion.getId());
+            } else if (promotion.getQuantity() > 1) {
+                promotion.setQuantity(promotion.getQuantity() - 1);
+            }
+        } else {
+            order.setTotalPrice(totalPrice);
+        }
+        setStateOrder(order.getId(), 1);
         order.setUser(user);
         orderRepository.save(order);
     }
@@ -83,20 +93,57 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public long totalAllOrder(){
+        List<Order> listOrder = orderRepository.findAll();
+        long totalOrder = 0;
+        for (Order order : listOrder) {
+            totalOrder += order.getTotalPrice();
+        }
+        return totalOrder;
+    }
+
+    @Override
     public List<Order> getOrderByUser(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found User With Username:" + username));
         return orderRepository.getOrderByUser(user.getId());
     }
 
     @Override
-    public void setStateOrder(Long id, int stateOrder) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found User With Username:" + id));
-        switch (stateOrder){
-            case 1: order.setState("Đơn đã đặt");
-            case 2: order.setState("Đang chuẩn bị");
-            case 3: order.setState("Đang giao hàng");
-            case 4: order.setState("Được đánh giá");
-            default: order.setState("Không thành công");
+    public void setStateOrder(long orderId, int stateNumber) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Not Found User With Username:" + orderId));
+        OrderState orderState = new OrderState();
+        System.out.println(orderStateRepository.checkState(orderId, "Đơn đã đặt"));
+        switch (stateNumber){
+            case 1: {
+                if (orderStateRepository.checkState(orderId, "Đơn đã đặt") == null){
+                    orderState.setState("Đơn đã đặt");
+                }
+                break;
+            }
+            case 2: {
+                if (orderStateRepository.checkState(orderId, "Đang chuẩn bị") == null){
+                    orderState.setState("Đang chuẩn bị");
+                }
+                break;
+            }
+            case 3: {
+                if (orderStateRepository.checkState(orderId, "Đang giao hàng") == null){
+                    orderState.setState("Đang giao hàng");
+                }
+                break;
+            }
+            case 4: {
+                if (orderStateRepository.checkState(orderId, "Giao hàng thành công") == null){
+                    orderState.setState("Giao hàng thành công");
+                }
+                break;
+            }
+            default: {
+                if (orderStateRepository.checkState(orderId, "Không thành công") == null){
+                    orderState.setState("Không thành công");
+                }
+                break;
+            }
         }
         orderRepository.save(order);
     }
@@ -106,30 +153,18 @@ public class OrderServiceImpl implements OrderService {
         return orderDetailRepository.getListByOrderId(order_id);
     }
 
-//    @Override
-//    public List<OrderDetail> getOrderDetailByIdOrder(Long id){
-//        List<OrderDetail> detailList = orderDetailRepository.getListByOrderId(id);
-////        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + ig_id));;
-////        long totalPrice = 0;
-////        for(OrderDetail rq: detailList){
-////            totalPrice += rq.getSubTotal();
-////        }
-////        importGoods.setTotalPrice(totalPrice);
-////        orderRepository.save(order);
-//        return detailList;
-////        return null;
-//    }
+    @Override
+    public List<OrderState> getListState(Long orderId){
+        return orderStateRepository.getListByOrderId(orderId);
+    }
 
     @Override
     public OrderDetail getOrderDetail(Cart cart,OrderDetail orderDetail, CreateOrderDetailRequest rq){
-        if (rq.getPromotionCode() != null) {
-            Promotion promotion = promotionService.findCode(rq.getPromotionCode());
-            System.out.println(promotion);
-            orderDetail.setSubTotal(cart.getPrice() * cart.getQuantity() * promotion.getPercent());
-            promotion.setQuantity(promotion.getQuantity() - 1);
-        }else {
-            orderDetail.setSubTotal(cart.getPrice() * cart.getQuantity());
-        }
+        orderDetail.setName(cart.getName());
+        orderDetail.setPrice(cart.getPrice());
+        orderDetail.setExpiry(cart.getExpiry());
+        orderDetail.setQuantity(cart.getQuantity());
+        orderDetail.setSubTotal(cart.getPrice()* cart.getQuantity());
         orderDetailRepository.save(orderDetail);
         return orderDetail;
     }

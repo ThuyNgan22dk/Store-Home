@@ -3,18 +3,14 @@ package com.example.demo.services.Impl;
 import com.example.demo.entities.Category;
 import com.example.demo.entities.Image;
 import com.example.demo.entities.Product;
-import com.example.demo.entities.Promotion;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.model.request.CreateImportDetailRequest;
 import com.example.demo.model.request.CreateProductRequest;
 import com.example.demo.repositories.CategoryRepository;
 import com.example.demo.repositories.ImageRepository;
 import com.example.demo.repositories.ProductRepository;
 import com.example.demo.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -31,6 +27,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ImageRepository imageRepository;
+
+    public DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+    public LocalDateTime now = LocalDateTime.now();
 
     @Override
     public List<Product> getList() {
@@ -55,10 +54,7 @@ public class ProductServiceImpl implements ProductService {
     public Product createProduct(CreateProductRequest request) {
         // TODO Auto-generated method stub
         Product product = new Product();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
         product.setDateCreated(dtf.format(now));
-//        product.setPrice(request.getPrice()+20000L);
         product.setEnabled(true);
         return getProduct(request, product);
     }
@@ -66,13 +62,11 @@ public class ProductServiceImpl implements ProductService {
     private Product getProduct(CreateProductRequest request, Product product) {
         product.setProductname(request.getProductname());
         product.setDescription(request.getDescription());
-//        product.setExpiry(request.getExpiry());
-//        product.setQuantity(request.getQuantity());
         product.setOrigin(request.getOrigin());
         product.setUnit(request.getUnit());
-//        product.setEnabled(false);
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(()-> new NotFoundException("Not Found Category With Id: " + request.getCategoryId()));
         product.setCategory(category);
+        product.setPrice(request.getPrice());
         if (product.getQuantity() <= 0) {
             product.setInventoryStatus("OUTOFSTOCK");
         } else if (product.getQuantity() < 10) {
@@ -95,7 +89,6 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(long id, CreateProductRequest request) {
         // TODO Auto-generated method stub
         Product product= productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + id));
-//        product.setPrice(request.getPrice());
         return getProduct(request, product);
     }
 
@@ -117,8 +110,6 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(long id) {
         // TODO Auto-generated method stub
         Product product= productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + id));
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
         product.setDateDeleted(dtf.format(now));
         product.setEnabled(false);
         product.getImages().remove(this);
@@ -143,6 +134,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findProductForUser(){
+        return productRepository.findProduct();
+    }
+
+    @Override
     public List<Product> getListProductByCategory(long id){
         return productRepository.getListProductByCategory(id);
     }
@@ -158,7 +154,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> searchProduct(String keyword) {
-        // TODO Auto-generated method stub
         return productRepository.searchProduct(keyword);
     }
 }

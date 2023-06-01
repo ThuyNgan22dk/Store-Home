@@ -8,9 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PromotionRepository extends JpaRepository<Promotion,Long> {
-//    @Query(value = "Select * from Promotion where code = :code",nativeQuery = true)
-//    Promotion findByCode(String code);
-
     @Query("Select c from Promotion c where c.enabled = true")
     List<Promotion> findALLByEnabled();
 }

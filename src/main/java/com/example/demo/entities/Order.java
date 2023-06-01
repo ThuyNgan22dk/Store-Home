@@ -25,7 +25,7 @@ public class Order {
     private String phone;
     private String note;
     private long totalPrice;
-    private String state;
+    private String stating;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @Column(name = "date_created")

@@ -6,6 +6,7 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.request.ChangePasswordRequest;
 import com.example.demo.model.request.CreateUserRequest;
 import com.example.demo.model.request.UpdateProfileRequest;
+import com.example.demo.repositories.ImageRepository;
 import org.springframework.data.domain.Sort;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
@@ -20,7 +21,6 @@ import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     @Autowired
     private UserRepository userRepository;
 
@@ -28,7 +28,12 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
 
     @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
     private PasswordEncoder encoder;
+    public DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+    public LocalDateTime now = LocalDateTime.now();
 
     @Override
     public void register(CreateUserRequest request) {
@@ -59,11 +64,18 @@ public class UserServiceImpl implements UserService {
                 }
             });
         }
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
         user.setDateCreated(dtf.format(now));
         user.setRoles(roles);
         userRepository.save(user);
+    }
+
+    @Override
+    public User setImageForUser(User user, Image image){
+        Set<Image> images = new HashSet<>();
+        images.add(image);
+        user.setImages(images);
+        userRepository.save(user);
+        return user;
     }
 
     @Override
@@ -90,9 +102,6 @@ public class UserServiceImpl implements UserService {
         user.setPhone(request.getPhone());
         user.setEmail(request.getEmail());
         user.setCountry(request.getCountry());
-        user.setState(request.getState());
-        user.setBank(request.getBank());
-        user.setBankAccount(request.getBankAccount());
         userRepository.save(user);
         return user;
     }
@@ -105,9 +114,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(long id, UpdateProfileRequest request) {
+    public User updateUser(String username, UpdateProfileRequest request) {
         // TODO Auto-generated method stub
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + id));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + username));
         return getUser(user, request);
     }
 
@@ -124,17 +133,15 @@ public class UserServiceImpl implements UserService {
         // TODO Auto-generated method stub
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + id));
         user.setEnabled(false);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
         user.setDateDeleted(dtf.format(now));
         userRepository.save(user);
     }
 
     @Override
-    public void changePassword(long id, ChangePasswordRequest request) {
+    public void changePassword(String username, ChangePasswordRequest request) {
         // TODO Auto-generated method stub
-         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + id));
-         if(!Objects.equals(encoder.encode(request.getOldPassword()), user.getPassword())){
+         User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found User With Id: " + username));
+         if(!encoder.matches(request.getOldPassword(), user.getPassword())){
            throw new BadRequestException("Old Passrword Not Same");
          }
          user.setPassword(encoder.encode(request.getNewPassword()));
@@ -142,9 +149,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + id));
-        user.setPassword(encoder.encode("123456"));
+    public String resetPassword(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found User With Id: " + username));
+        String code = String.valueOf(gen());
+        user.setPassword(encoder.encode(code));
         userRepository.save(user);
     }
 }

@@ -6,21 +6,29 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.request.ChangeWarehouseRequest;
 import com.example.demo.repositories.ProductRepository;
 import com.example.demo.repositories.WarehouseRepository;
+import com.example.demo.services.ImportService;
+import com.example.demo.services.OrderService;
 import com.example.demo.services.WarehouseServise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class WarehouseServiceImpl implements WarehouseServise {
-
     @Autowired
     private ProductRepository productRepository;
 
     @Autowired
     private WarehouseRepository warehouseRepository;
+
+    @Autowired
+    private ImportService importService;
+
+    @Autowired
+    private OrderService orderService;
 
     @Override
     public List<Warehouse> getList() {
@@ -28,8 +36,16 @@ public class WarehouseServiceImpl implements WarehouseServise {
     }
 
     @Override
-    public void revenueStatistics() {
+    public List<Warehouse> getListType(String type){
+        return warehouseRepository.getListType(type);
+    }
 
+
+
+    @Override
+    public void revenueStatistics() {
+        long totalImport = importService.totalAllImport();
+        long totalOrder = orderService.totalAllOrder();
     }
 
     @Override
@@ -45,9 +61,8 @@ public class WarehouseServiceImpl implements WarehouseServise {
             } else {
                 product.setInventoryStatus("INSTOCK");
             }
-//            warehouse.setProduct(product);
-            System.out.println(product.getQuantity());
-            System.out.println(request.getQuantity());
+            warehouse.setProduct(product);
+            warehouse.setTypeWarehouse("order");
             warehouse.setExpiry(request.getExpiry());
             warehouse.setQuantity(request.getQuantity());
             warehouseRepository.save(warehouse);
