@@ -14,7 +14,7 @@ public interface ImageService {
     Image save(Image image);
     User saveUser(String username);
 
-    List<Image> getListByUser(long userId);
+    List<Image> getListByUser(String username);
 
     void deleteImage(long id);
 }

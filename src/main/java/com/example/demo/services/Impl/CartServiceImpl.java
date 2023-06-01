@@ -67,17 +67,12 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart updateCart(long id, int quantity) {
         Cart cart = cartRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Cart With Id: " + id));
-<<<<<<< Updated upstream
-        cart.setQuantity(quantity);
-        cartRepository.save(cart);
-=======
         if (quantity <= cart.getProduct().getQuantity()) {
             cart.setQuantity(quantity);
             cart.setTotal(cart.getPrice() * cart.getQuantity());
             cartRepository.save(cart);
         }
         System.out.println("Khong the cap nhat");
->>>>>>> Stashed changes
         return cart;
     }
 

@@ -68,6 +68,4 @@ public class CreateProductRequest {
     @NotNull(message="Ảnh sản phẩm rỗng")
     @Schema(description="Mảng Id của hình ảnh",example="[1,2,3]")
     private Set<Long> imageIds;
-
-    private List<CreateCommentRequest> comments;
 }

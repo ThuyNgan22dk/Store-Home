@@ -29,7 +29,6 @@ public class Product {
     private String unit;
     private int quantity;
     private String inventoryStatus;
-    private int rate;
     private long price;
     private boolean enabled;
     //hạn sử dụng
@@ -52,8 +51,4 @@ public class Product {
     @ManyToMany
     @JoinTable(name = "product_image",joinColumns = @JoinColumn(name="product_id"),inverseJoinColumns = @JoinColumn(name="image_id"))
     private Set<Image> images = new HashSet<>();
-
-    @OneToMany(mappedBy="product")
-    @JsonBackReference
-    private Set<Comment> comments;
 }

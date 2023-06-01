@@ -46,6 +46,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findProductForUser(){
+        return productRepository.findProduct();
+    }
+
+    @Override
     public Product getProduct(long id) {
         // TODO Auto-generated method stub
         return productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + id));
@@ -80,7 +85,6 @@ public class ProductServiceImpl implements ProductService {
         } else {
             product.setInventoryStatus("INSTOCK");
         }
-        product.setRate(0);
         Set<Image> images = new HashSet<>();
         for(long imageId: request.getImageIds()){
             Image image = imageRepository.findById(imageId).orElseThrow(() -> new NotFoundException("Not Found Image With Id: " + imageId));
@@ -149,7 +153,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getListByPriceRange(long id,int min, int max){
-        return productRepository.getListProductByPriceRange(id, min, max);
+        if (id == 0) {
+            return productRepository.getListProductByPriceRange(min, max);
+        } else {
+            return productRepository.getListProductByPriceRangeCategoryId(id, min, max);
+        }
     }
 
     @Override

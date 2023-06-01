@@ -84,6 +84,15 @@ public class UserServiceImpl implements UserService {
         return list;
     }
 
+    @Override
+    public User setImageForUser(User user, Image image){
+        Set<Image> images = new HashSet<>();
+        images.add(image);
+        user.setImages(images);
+        userRepository.save(user);
+        return user;
+    }
+
     private User getUser(User user, UpdateProfileRequest request){
         user.setFirstname(request.getFirstname());
         user.setLastname(request.getLastname());
@@ -91,9 +100,6 @@ public class UserServiceImpl implements UserService {
         user.setPhone(request.getPhone());
         user.setEmail(request.getEmail());
         user.setCountry(request.getCountry());
-        user.setState(request.getState());
-        user.setBank(request.getBank());
-        user.setBankAccount(request.getBankAccount());
         userRepository.save(user);
         return user;
     }

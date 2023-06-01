@@ -2,13 +2,10 @@ package com.example.demo.services.Impl;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.example.demo.entities.*;
 import com.example.demo.model.request.ChangeWarehouseRequest;
-import com.example.demo.model.request.CreateOrderStateRequest;
 import com.example.demo.repositories.*;
 import com.example.demo.services.PromotionService;
 import com.example.demo.services.WarehouseServise;
@@ -75,13 +72,10 @@ public class OrderServiceImpl implements OrderService {
                 orderDetail.setOrder(order);
                 totalPrice += orderDetail.getSubTotal();
                 orderDetailRepository.save(orderDetail);
-<<<<<<< Updated upstream
-=======
                 cart.setDateDeleted(dtf.format(now));
                 cartRepository.save(cart);
             } else {
 //                System.out.println("Khong the dat hang");
->>>>>>> Stashed changes
             }
         }
         if (request.getPromotionCode() != null) {
@@ -140,19 +134,6 @@ public class OrderServiceImpl implements OrderService {
         return orderDetailRepository.getListByOrderId(orderId);
     }
 
-<<<<<<< Updated upstream
-    @Override
-    public OrderDetail getOrderDetail(Cart cart,OrderDetail orderDetail, CreateOrderDetailRequest rq){
-        String promotionCode = rq.getPromotionCode();
-        if (promotionCode != null) {
-            Promotion promotion = promotionService.findCode(rq.getPromotionCode());
-            System.out.println(promotion);
-            orderDetail.setSubTotal(cart.getPrice() * cart.getQuantity() * promotion.getPercent());
-            promotion.setQuantity(promotion.getQuantity() - 1);
-        }else {
-            orderDetail.setSubTotal(cart.getPrice() * cart.getQuantity());
-        }
-=======
     @Override
     public List<OrderState> getListState(Long orderId){
         return orderStateRepository.getListByOrderId(orderId);
@@ -160,13 +141,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDetail getOrderDetail(Cart cart,OrderDetail orderDetail, CreateOrderDetailRequest rq){
-
         orderDetail.setName(cart.getName());
         orderDetail.setPrice(cart.getPrice());
         orderDetail.setExpiry(cart.getExpiry());
         orderDetail.setQuantity(cart.getQuantity());
         orderDetail.setSubTotal(cart.getPrice()* cart.getQuantity());
->>>>>>> Stashed changes
         orderDetailRepository.save(orderDetail);
         return orderDetail;
     }

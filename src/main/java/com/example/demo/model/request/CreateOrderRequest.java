@@ -45,13 +45,9 @@ public class CreateOrderRequest {
     @NotEmpty(message="Tên địa chỉ rỗng")
     private String address;
 
-<<<<<<< Updated upstream
-//    private int state;
-=======
     private String promotionCode;
 //    private Set<Long> states;
 //    private String state;
->>>>>>> Stashed changes
     private String note;
 
 //    private long totalPrice;

@@ -13,9 +13,6 @@ public class UpdateProfileRequest {
     private String lastname;
     private String email;
     private String country;
-    private String state;
-    private String bank;
-    private String bankAccount;
     private String address;
     private String phone;
 }

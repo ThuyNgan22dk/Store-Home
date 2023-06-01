@@ -30,10 +30,6 @@ public class User {
     private String phone;
     //Dat nuoc
     private String country;
-    private String bank;
-    private String bankAccount;
-    //Khu vuc
-    private String state;
     private boolean enabled;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
@@ -48,9 +44,7 @@ public class User {
     @JoinTable(name = "user_roles",joinColumns = @JoinColumn(name = "user_id"),inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany
-    @JoinColumn(name = "history_purchase")
-    private Set<Order> orders = new HashSet<>();
-
-
+    @ManyToMany
+    @JoinTable(name = "user_image",joinColumns = @JoinColumn(name="user_id"),inverseJoinColumns = @JoinColumn(name="image_id"))
+    private Set<Image> images = new HashSet<>();
 }

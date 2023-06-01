@@ -16,13 +16,8 @@ public interface OrderService {
 
     List<Order> getOrderByUser(String username);
 
-<<<<<<< Updated upstream
-//    List<OrderDetail> findAllOrderDetail();
-    void setStateOrder(Long id, int stateOrder);
-=======
 //    List<OrderDetail> getOrderDetailByIdOrder(Long id);
     void setStateOrder(long orderId, int stateNumber);
->>>>>>> Stashed changes
 
     OrderDetail getOrderDetail(Cart cart, OrderDetail orderDetail, CreateOrderDetailRequest rq);
     List<OrderState> getListState(Long orderId);

@@ -39,13 +39,14 @@ public class ImageServiceImpl implements ImageService {
     }
 
     public User saveUser(String username){
-        return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Image not found width id :" + username));
+        return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Image not found width username :" + username));
     }
 
     @Override
-    public List<Image> getListByUser(long userId) {
+    public List<Image> getListByUser(String username) {
         // TODO Auto-generated method stub
-        return imageRepository.getListImageOfUser(userId);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Image not found width id :" + username));
+        return imageRepository.getListImageOfUser(user.getId());
     }
 
     @Override

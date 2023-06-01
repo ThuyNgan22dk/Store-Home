@@ -41,7 +41,7 @@ public class CartController {
         return ResponseEntity.ok(cart);
     }
 
-    @PostMapping("/changeProduct")
+    @PutMapping("/changeProduct")
     public ResponseEntity<?> changeProductQuantity(@Valid @RequestBody CreateChangeCartRequest request){
         Cart cart = cartService.changeQuantityProductOnCart(request);
         return ResponseEntity.ok(cart);
