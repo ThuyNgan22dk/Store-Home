@@ -45,8 +45,13 @@ public class PromotionServiceImpl implements PromotionService {
     public Promotion findCode(String code){
         List<Promotion> promotions = findAll();
         for (Promotion promotion : promotions) {
-            if (code.equals(promotion.getCode()) && promotion.getQuantity() > 0) {
-                return promotion;
+            if (code.equals(promotion.getCode())) {
+                System.out.println(promotion.getCode());
+                if (promotion.getQuantity() > 0){
+                    return promotion;
+                }else if (promotion.getQuantity() == 0) {
+                    enablePromotion(promotion.getId());
+                }
             }
         }
         return null;

@@ -10,6 +10,7 @@ public interface ImageService {
     Image getImageById(long id);
 
     Image save(Image image);
+    User saveUser(String username);
 
     List<Image> getListByUser(String username);
 

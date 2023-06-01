@@ -91,7 +91,7 @@ public class ImportServiceImpl implements ImportService {
     }
 
     private ImportDetail getImportDetail(CreateImportDetailRequest rq, ImportDetail importDetail){
-        ChangeWarehouseRequest changeWarehouseRequest = new ChangeWarehouseRequest(rq.getName(), rq.getQuantity(), rq.getExpiry());
+        ChangeWarehouseRequest changeWarehouseRequest = new ChangeWarehouseRequest(rq.getName(), rq.getQuantity(), rq.getExpiry(),"");
         warehouseServise.addImport(changeWarehouseRequest);
         importDetail.setName(rq.getName());
         importDetail.setPrice(rq.getPrice());

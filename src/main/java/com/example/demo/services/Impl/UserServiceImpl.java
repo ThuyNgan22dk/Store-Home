@@ -65,6 +65,7 @@ public class UserServiceImpl implements UserService {
             });
         }
         user.setDateCreated(dtf.format(now));
+        user.setEnabled(true);
         user.setRoles(roles);
         userRepository.save(user);
     }
@@ -144,8 +145,15 @@ public class UserServiceImpl implements UserService {
          if(!encoder.matches(request.getOldPassword(), user.getPassword())){
            throw new BadRequestException("Old Passrword Not Same");
          }
-         user.setPassword(encoder.encode(request.getNewPassword()));
-         userRepository.save(user);
+         else {
+             user.setPassword(encoder.encode(request.getNewPassword()));
+             userRepository.save(user);
+         }
+    }
+
+    public int gen() {
+        Random r = new Random( System.currentTimeMillis() );
+        return ((1 + r.nextInt(2)) * 100000 + r.nextInt(100000));
     }
 
     @Override
@@ -154,5 +162,6 @@ public class UserServiceImpl implements UserService {
         String code = String.valueOf(gen());
         user.setPassword(encoder.encode(code));
         userRepository.save(user);
+        return code;
     }
 }

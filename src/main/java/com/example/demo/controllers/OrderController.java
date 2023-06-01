@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import java.util.List;
 import com.example.demo.entities.OrderDetail;
+import com.example.demo.entities.OrderState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +28,15 @@ public class OrderController {
 
     @GetMapping("/orderDetail/{order_id}")
     @Operation(summary="Lấy ra danh sách chi tiết các sản phẩm trong đơn mua hàng")
-    public ResponseEntity<List<OrderDetail>> getListByOrderId(@PathVariable Long order_id){
+    public ResponseEntity<List<OrderDetail>> getListDetailByOrderId(@PathVariable Long order_id){
         List<OrderDetail> list = orderService.getListByOrderId(order_id);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/orderState/{order_id}")
+    @Operation(summary="Lấy ra danh sách chi tiết các sản phẩm trong đơn mua hàng")
+    public ResponseEntity<List<OrderState>> getListStateByOrderId(@PathVariable Long order_id){
+        List<OrderState> list = orderService.getListState(order_id);
         return ResponseEntity.ok(list);
     }
 

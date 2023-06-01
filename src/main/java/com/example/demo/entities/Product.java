@@ -29,7 +29,6 @@ public class Product {
     private String unit;
     private int quantity;
     private String inventoryStatus;
-    private int rate;
     private long price;
     private boolean enabled;
     //hạn sử dụng

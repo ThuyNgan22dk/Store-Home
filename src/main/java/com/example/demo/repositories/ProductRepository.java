@@ -29,13 +29,15 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     @Query(value ="Select * from Product where category_id = :id and enabled = true",nativeQuery = true)
     List<Product> getListProductByCategory(long id);
 
+    @Query(value = "Select * from Product where enabled = true and price between :min and :max",nativeQuery = true)
+    List<Product> getListProductByPriceRange(int min,int max);
+
     @Query(value = "Select * from Product where category_id = :id and enabled = true and price between :min and :max",nativeQuery = true)
-    List<Product> getListProductByPriceRange(long id,int min,int max);
+    List<Product> getListProductByPriceRangeCategoryId(long id,int min,int max);
 
     @Query(value= "Select * from Product p where p.enabled = true and p.productname like %:keyword% order by id desc", nativeQuery = true)
     List<Product> searchProduct(String keyword);
 
     @Query(value = "Select * from Product p where p.enabled = true",nativeQuery = true)
     List<Product> findALLByEnabled();
-
 }

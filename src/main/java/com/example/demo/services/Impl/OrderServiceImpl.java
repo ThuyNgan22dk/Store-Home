@@ -27,6 +27,9 @@ public class OrderServiceImpl implements OrderService {
     private OrderDetailRepository orderDetailRepository;
 
     @Autowired
+    private OrderStateRepository orderStateRepository;
+
+    @Autowired
     private CartRepository cartRepository;
 
     @Autowired
@@ -57,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
         long totalPrice = 0;
         for(CreateOrderDetailRequest rq: request.getOrderDetails()){
             Cart cart = cartRepository.findById(rq.getCartId()).orElseThrow(() -> new NotFoundException("Not Found User With Username:" + rq.getCartId()));
-            ChangeWarehouseRequest changeWarehouseRequest = new ChangeWarehouseRequest(cart.getName(), cart.getQuantity(), cart.getExpiry());
+            ChangeWarehouseRequest changeWarehouseRequest = new ChangeWarehouseRequest(cart.getName(), cart.getQuantity(), cart.getExpiry(), "");
             if (warehouseServise.addOrder(changeWarehouseRequest)){
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail = getOrderDetail(cart, orderDetail, rq);
@@ -145,12 +148,17 @@ public class OrderServiceImpl implements OrderService {
                 break;
             }
         }
+        orderState.setDatetime(dtf.format(now));
+        orderState.setOrder(order);
+        orderStateRepository.save(orderState);
+        order.setStating(orderState.getState());
         orderRepository.save(order);
+//        return orderState;
     }
 
     @Override
-    public List<OrderDetail> getListByOrderId(Long order_id){
-        return orderDetailRepository.getListByOrderId(order_id);
+    public List<OrderDetail> getListByOrderId(Long orderId){
+        return orderDetailRepository.getListByOrderId(orderId);
     }
 
     @Override

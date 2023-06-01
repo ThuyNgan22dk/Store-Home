@@ -32,6 +32,13 @@ public class PromotionController {
         return ResponseEntity.ok(promotions);
     }
 
+    @GetMapping("/findCode/{code}")
+    @Operation(summary="Lấy ra danh sách mã giảm giá đã kích hoạt")
+    public ResponseEntity<Promotion> getPromotionByCode(@PathVariable String code){
+        Promotion promotion = promotionService.findCode(code);
+        return ResponseEntity.ok(promotion);
+    }
+
     @PostMapping("/create")
     @Operation(summary="Tạo mới mã giảm giá")
     public ResponseEntity<?> createPromotion(@Valid @RequestBody CreatePromotionRequest request){

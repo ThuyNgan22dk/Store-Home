@@ -85,6 +85,7 @@ public class WarehouseServiceImpl implements WarehouseServise {
         warehouse.setProduct(product);
         warehouse.setExpiry(request.getExpiry());
         warehouse.setQuantity(request.getQuantity());
+        warehouse.setTypeWarehouse("import");
         warehouseRepository.save(warehouse);
     }
 }

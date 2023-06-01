@@ -12,6 +12,7 @@ public interface ProductService {
     List<Product> getListByPrice();
 
     List<Product> findRelatedProduct(long id);
+    List<Product> findProductForUser();
 
     List<Product> findProductForUser();
 

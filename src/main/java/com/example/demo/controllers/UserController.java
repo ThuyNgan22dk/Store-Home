@@ -45,10 +45,10 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{username}")
     @Operation(summary="Tìm user bằng id và cập nhật user đó")
-    public ResponseEntity<?> updateUser(@PathVariable long id, @Valid @RequestBody UpdateProfileRequest request){
-        User user = userService.updateUser(id, request);
+    public ResponseEntity<?> updateUser(@PathVariable String username, @Valid @RequestBody UpdateProfileRequest request){
+        User user = userService.updateUser(username, request);
         return ResponseEntity.ok(user);
     }
 
@@ -59,18 +59,18 @@ public class UserController {
         return ResponseEntity.ok(new MessageResponse("Cập nhật thành công"));
     }
 
-    @PutMapping("/changePassword/{id}")
+    @PutMapping("/changePassword/{username}")
     @Operation(summary = "Tìm user bằng id và thay đổi password")
-    public ResponseEntity<?> changePassword(@PathVariable long id, @Valid @RequestBody ChangePasswordRequest request){
-        userService.changePassword(id, request);
+    public ResponseEntity<?> changePassword(@PathVariable String username, @Valid @RequestBody ChangePasswordRequest request){
+        userService.changePassword(username, request);
         return ResponseEntity.ok(new MessageResponse("Cập nhật thành công"));
     }
 
-    @PutMapping("/resetPassword/{id}")
+    @PutMapping("/resetPassword/{username}")
     @Operation(summary = "Tìm user bằng id và reset password")
-    public ResponseEntity<?> resetPassword(@PathVariable long id){
-        userService.resetPassword(id);
-        return ResponseEntity.ok(new MessageResponse("Cập nhật thành công"));
+    public ResponseEntity<?> resetPassword(@PathVariable String username){
+        String code = userService.resetPassword(username);
+        return ResponseEntity.ok(code);
     }
 
     @DeleteMapping("/delete/{id}")

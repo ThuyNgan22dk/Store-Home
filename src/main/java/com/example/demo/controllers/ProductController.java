@@ -41,6 +41,7 @@ public class ProductController {
         return ResponseEntity.ok(list);
     }
 
+
     @GetMapping("/newest/{number}")
     @Operation(summary="Lấy ra danh sách sản phẩm mới nhất giới hạn số lượng = number")
     public ResponseEntity<List<Product>> getListNewst(@PathVariable int number){
@@ -74,7 +75,7 @@ public class ProductController {
     public ResponseEntity<List<Product>> getListProductByPriceRange(@RequestParam("id") long id,@RequestParam("min") int min, @RequestParam("max") int max){
         min*=1000;
         max*=1000;
-        System.out.println("min: " + min + " max: " + max);
+//        System.out.println("min: " + min + " max: " + max);
         List<Product> list = productService.getListByPriceRange(id, min, max);
         return ResponseEntity.ok(list);
     }
@@ -108,14 +109,14 @@ public class ProductController {
     }
 
     @GetMapping("/enabled")
-    @Operation(summary="Lấy ra danh sách mã giảm giá đã kích hoạt")
+    @Operation(summary="Lấy ra danh sách sản phẩm đã kích hoạt")
     public ResponseEntity<List<Product>> getListEnabled(){
         List<Product> products = productService.getListEnabled();
         return ResponseEntity.ok(products);
     }
 
     @PutMapping("/enable/{id}")
-    @Operation(summary="Kích hoạt mã giảm giá bằng id")
+    @Operation(summary="Kích hoạt sản phẩm bằng id")
     public ResponseEntity<?> enabled(@PathVariable long id){
         productService.enableProduct(id);
         return ResponseEntity.ok(new MessageResponse("Cập nhật thành công"));

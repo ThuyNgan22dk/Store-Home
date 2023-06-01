@@ -16,6 +16,8 @@ public interface UserService {
 
     List<User> getAllUsers();
 
+    User setImageForUser(User user, Image image);
+
     User updateUser(UpdateProfileRequest request);
 
     User updateUser(String username, UpdateProfileRequest request);
