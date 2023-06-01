@@ -18,7 +18,8 @@ public class CreateChangeCartRequest {
     @Size(min=5,max=50,message="Tên sản phẩm từ 5-50 ký tự")
     private String name;
 
-    @NotNull(message = "Số lượng sản phẩm rỗng")
+    @NotNull()
     private int quantity;
+    @NotNull()
     private int quantityAdd;
 }

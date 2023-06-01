@@ -8,9 +8,12 @@ import java.util.List;
 public interface WarehouseServise {
     List<Warehouse> getList();
 
+    List<Warehouse> getListType(String type);
+
     void revenueStatistics();
 
     boolean addOrder(ChangeWarehouseRequest request);
+//    void deleteWasehouse(long id);
 
     void addImport(ChangeWarehouseRequest request);
 }

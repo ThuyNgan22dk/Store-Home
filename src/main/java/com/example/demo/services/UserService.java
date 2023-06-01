@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface UserService {
     void register(CreateUserRequest request);
+
+    User setImageForUser(User user, Image image);
     User getUserByUsername(String username);
 
     List<User> getAllUsers();

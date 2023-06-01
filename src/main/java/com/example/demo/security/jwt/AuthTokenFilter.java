@@ -19,7 +19,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.example.demo.security.service.UserDetailsServiceImpl;
 
 public class AuthTokenFilter extends OncePerRequestFilter  {
-
     @Autowired
     private JwtUtils jwtUtils;
   
@@ -35,22 +34,15 @@ public class AuthTokenFilter extends OncePerRequestFilter  {
         String jwt = parseJwt(request);
         if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
           String username = jwtUtils.getUserNameFromJwtToken(jwt);
-  
           UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-          
           UsernamePasswordAuthenticationToken authentication = 
-              new UsernamePasswordAuthenticationToken(userDetails,
-                                                      null,
-                                                      userDetails.getAuthorities());
-          
+              new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
           authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-  
           SecurityContextHolder.getContext().setAuthentication(authentication);
         }
       } catch (Exception e) {
         logger.error("Cannot set user authentication: {}", e);
       }
-  
       filterChain.doFilter(request, response);
     }
   
@@ -58,5 +50,4 @@ public class AuthTokenFilter extends OncePerRequestFilter  {
       String jwt = jwtUtils.getJwtFromCookies(request);
       return jwt;
     }
-    
 }

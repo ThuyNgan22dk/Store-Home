@@ -27,11 +27,6 @@ public class Order {
     private String phone;
     private String note;
     private long totalPrice;
-
-//    @OneToMany(mappedBy="order")
-//    @JoinColumn(name="orderstate_id")
-//    @JsonBackReference
-//    private Set<OrderState> state;
     private String stating;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)

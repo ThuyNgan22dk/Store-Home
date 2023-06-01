@@ -13,12 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.example.demo.entities.Image;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.InternalServerException;
 import com.example.demo.services.ImageService;
-
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
@@ -36,12 +34,11 @@ public class ImageController {
     @GetMapping("/")
     public ResponseEntity<?> getList(){
         List<Image> listImage = imageService.getListImage();
-
         return  ResponseEntity.ok(listImage);
     }
 
     @GetMapping("/user/{username}")
-    @Operation(summary="Lấy ra danh sách hình ảnh của user bằng user_id")
+    @Operation(summary="Lấy ra danh sách hình ảnh của user bằng username")
     public ResponseEntity<?> getListByUser(@PathVariable String username){
         List<Image> listImage = imageService.getListByUser(username);
         return ResponseEntity.ok(listImage);
@@ -86,13 +83,12 @@ public class ImageController {
     }
 
     @PostMapping("/upload-file/{username}")
-    @Operation(summary="Upload file lên database cho người dùng")
+    @Operation(summary="Upload file lên database")
     public ResponseEntity<?> uploadFileByUser(@PathVariable String username, @RequestParam("file") MultipartFile file){
         File uploadDir = new File(UPLOAD_DIR);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
         }
-
         String originalFilename = file.getOriginalFilename();
         String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);;
         if (originalFilename != null && originalFilename.length() > 0) {
@@ -101,12 +97,11 @@ public class ImageController {
             }
             try {
                 Image img = new Image();
-                User user = userService.getUserByUsername(username);
+                User user = imageService.saveUser(username);
                 img.setName(file.getName());
                 img.setSize(file.getSize());
                 img.setType(extension);
                 img.setData(file.getBytes());
-                img.setUploadedBy(imageService.saveUser(username));
                 String uid = UUID.randomUUID().toString();
                 String link = UPLOAD_DIR + uid + "." + extension;
                 // Create file
@@ -114,8 +109,8 @@ public class ImageController {
                 BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
                 stream.write(file.getBytes());
                 stream.close();
+                img.setUploadedBy(user);
                 imageService.save(img);
-//                userService.setImageForUser(user, img);
                 return ResponseEntity.ok(img);
             } catch (Exception e) {
                 throw new InternalServerException("Lỗi khi upload file");
@@ -130,6 +125,4 @@ public class ImageController {
         imageService.deleteImage(id);
         return ResponseEntity.ok(new MessageResponse("Xóa thành công"));
     }
-
-
 }

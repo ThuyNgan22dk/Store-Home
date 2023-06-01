@@ -14,7 +14,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreatePromotionRequest {
-
     @NotNull(message = "Khuyến mãi rỗng")
     @NotEmpty(message="Khuyến mãi rỗng")
     @Schema(description = "Khuyến mãi",example="Promotion1",required=true)

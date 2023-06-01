@@ -14,19 +14,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.entities.Product;
 import com.example.demo.model.request.CreateProductRequest;
 import com.example.demo.model.response.MessageResponse;
 import com.example.demo.services.ProductService;
-
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/api/product")
 @CrossOrigin(origins = "*",maxAge = 3600)
 public class ProductController {
-
     @Autowired
     private ProductService productService;
 
@@ -34,7 +31,6 @@ public class ProductController {
     @Operation(summary="Lấy ra danh sách sản phẩm")
     public ResponseEntity<List<Product>> getList(){
         List<Product> list = productService.getList();
-
         return ResponseEntity.ok(list);
     }
 
@@ -44,6 +40,7 @@ public class ProductController {
         List<Product> list = productService.findProductForUser();
         return ResponseEntity.ok(list);
     }
+
 
     @GetMapping("/newest/{number}")
     @Operation(summary="Lấy ra danh sách sản phẩm mới nhất giới hạn số lượng = number")
@@ -76,8 +73,9 @@ public class ProductController {
     @GetMapping("/range")
     @Operation(summary="Lấy ra danh sách sản phẩm ở các mức giá từ min đến max")
     public ResponseEntity<List<Product>> getListProductByPriceRange(@RequestParam("id") long id,@RequestParam("min") int min, @RequestParam("max") int max){
-        max*=1000;
         min*=1000;
+        max*=1000;
+//        System.out.println("min: " + min + " max: " + max);
         List<Product> list = productService.getListByPriceRange(id, min, max);
         return ResponseEntity.ok(list);
     }

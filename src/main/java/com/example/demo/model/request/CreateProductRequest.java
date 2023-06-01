@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProductRequest {
-
     @NotNull(message = "Tên sản phẩm rỗng")
     @NotEmpty(message="Tên sản phẩm rỗng")
     @Schema(description = "Tên sản phẩm",example="Product1", required=true)
@@ -36,29 +35,17 @@ public class CreateProductRequest {
     @Size(min=5,max=1000,message="Nơi sản xuất sản phẩm từ 5-1000 ký tự")
     private String origin;
 
+//    @NotNull(message = "Nơi sản xuất rỗng")
+//    @NotEmpty(message="Nơi sản xuất rỗng")
+//    @Schema(description = "Nơi sản xuất sản phẩm",example="Đà Nẵng")
+//    @Size(min=5,max=1000,message="Nơi sản xuất sản phẩm từ 5-1000 ký tự")
+    private long price;
+
     @NotNull(message = "Đơn vị tính rỗng")
     @NotEmpty(message="Đơn vị tính rỗng")
     @Schema(description = "Đơn vị tính sản phẩm",example="thùng/lốc/lon")
     @Size(min=3,max=10,message="Đơn vị tính sản phẩm từ 3-10 ký tự")
     private String unit;
-
-//    @NotNull(message = "Giá tiền rỗng")
-//    @NotEmpty(message = "Giá tiền rỗng")
-//    @Schema(description = "Giá sản phẩm",example = "12")
-//    @Size(min=0,message="Giá tiền sản phẩm lớn hơn 0")
-//    private long price;
-
-//    @NotNull(message = "Số lượng sản phẩm")
-//    @NotEmpty(message="Số lượng sản phẩm")
-//    @Schema(description = "Số lượng sản phẩm",example="12")
-//    @Size(min=0,message="Số lượng sản phẩm từ 0")
-//    private int quantity;
-
-//    @NotNull(message = "Hạn sử dụng rỗng")
-//    @NotEmpty(message="Hạn sử dụng rỗng")
-//    @Schema(description = "Hạn sử dụng sản phẩm",example="yyyy-MM-dd")
-//    @Size(min=5,max=20,message="Hạn sử dụng sản phẩm từ 5-20 ký tự")
-//    private String expiry;
 
     @NotNull(message = "Danh mục rỗng")
     @NotEmpty(message = "Danh mục rỗng")

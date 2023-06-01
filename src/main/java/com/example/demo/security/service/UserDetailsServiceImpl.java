@@ -13,7 +13,6 @@ import com.example.demo.repositories.UserRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-
     @Autowired
     private UserRepository userRepository;
 
@@ -23,17 +22,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // TODO Auto-generated method stub
         User user = userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-
-        // if(user != null && user.isEnabled()){
-            
-        //     return UserDetailsImpl.build(user);
-        // }else{
-        //     throw new UsernameNotFoundException("User Not Found with username: " + username);
-        // }
-
         return UserDetailsImpl.build(user);
-
-        
     }
-    
 }

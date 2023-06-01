@@ -33,7 +33,6 @@ import io.swagger.v3.oas.annotations.Operation;
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*",maxAge = 3600)
 public class AuthController {
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -52,23 +51,17 @@ public class AuthController {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
                         loginRequest.getPassword()));
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
         ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
-
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
-
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .body(new UserInfoResponse(userDetails.getId(),
                         userDetails.getUsername(),
                         userDetails.getEmail(),
                         roles));
-//         return ResponseEntity.ok(jwtCookie);
     }
 
     @PostMapping("/register")

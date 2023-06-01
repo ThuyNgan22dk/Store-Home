@@ -3,7 +3,6 @@ package com.example.demo.controllers;
 import java.util.List;
 
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,19 +14,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.entities.Category;
 import com.example.demo.model.request.CreateCategoryRequest;
 import com.example.demo.model.response.MessageResponse;
 import com.example.demo.services.CategoryService;
-
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/api/category")
 @CrossOrigin(origins = "*",maxAge = 3600)
 public class CategoryController {
-
     @Autowired
     private CategoryService categoryService;
 

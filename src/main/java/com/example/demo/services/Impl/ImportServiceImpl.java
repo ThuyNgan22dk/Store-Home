@@ -16,7 +16,6 @@ import java.util.List;
 
 @Service
 public class ImportServiceImpl implements ImportService {
-
     @Autowired
     private ImportGoodsRepository importGoodsRepository;
 
@@ -28,6 +27,9 @@ public class ImportServiceImpl implements ImportService {
 
     @Autowired
     private WarehouseServise warehouseServise;
+
+    public DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+    public LocalDateTime now = LocalDateTime.now();
 
     @Override
     public void placeImport(CreateImportGoodRequest request) {
@@ -41,10 +43,7 @@ public class ImportServiceImpl implements ImportService {
         importGoods.setPhoneShipper(request.getPhoneShipper());
         importGoods.setNote(request.getNote());
         //Date-time
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
         importGoods.setDateCreated(dtf.format(now));
-
         importGoodsRepository.save(importGoods);
         long totalPrice = 0;
         for(CreateImportDetailRequest rq: request.getImportDetails()){
@@ -69,6 +68,16 @@ public class ImportServiceImpl implements ImportService {
     }
 
     @Override
+    public long totalAllImport(){
+        List<ImportGoods> listImport = importGoodsRepository.findAll();
+        long totalImport = 0;
+        for (ImportGoods importGoods : listImport) {
+            totalImport += importGoods.getTotalPrice();
+        }
+        return totalImport;
+    }
+
+    @Override
     public List<ImportDetail> getListDetail(Long ig_id){
         List<ImportDetail> detailList = importDetailRepository.getListDetailById(ig_id);
         ImportGoods importGoods = importGoodsRepository.findById(ig_id).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + ig_id));;
@@ -89,11 +98,30 @@ public class ImportServiceImpl implements ImportService {
         importDetail.setQuantity(rq.getQuantity());
         importDetail.setExpiry(rq.getExpiry());
         importDetail.setSubTotal(rq.getPrice()* rq.getQuantity());
-        System.out.println(rq.getImportGoodId());
         ImportGoods importGoods = importGoodsRepository.findById(rq.getImportGoodId()).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + rq.getImportGoodId()));
         importDetail.setImportGoods(importGoods);
         Product product = productRepository.findByProductname(rq.getName()).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + rq.getName()));
-        product.setPrice(rq.getPrice() + 20000L);
+//        product.setPrice(rq.getPrice() + 10000L);
+        long temp = 0;
+        switch (product.getUnit()){
+            case "Thùng": {
+                temp = 20000L;
+                break;
+            }
+            case "Lốc": {
+                temp = 8000L;
+                break;
+            }
+            case "Hộp": {
+                temp = 10000L;
+                break;
+            }
+            default: {
+                temp = 5000L;
+                break;
+            }
+        }
+        product.setPrice(rq.getPrice() + temp);
         product.setExpiry(rq.getExpiry());
         if (product.getQuantity() <= 0) {
             product.setInventoryStatus("OUTOFSTOCK");
@@ -112,7 +140,6 @@ public class ImportServiceImpl implements ImportService {
     public void createProductImport(CreateImportDetailRequest rq){
         ImportDetail importDetail = new ImportDetail();
         getImportDetail(rq, importDetail);
-//        importDetailRepository.save(importDetail);
     }
 
     @Override
@@ -130,8 +157,6 @@ public class ImportServiceImpl implements ImportService {
     @Override
     public void deleteImport(Long id){
         ImportGoods importGoods = importGoodsRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + id));
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
         importGoods.setDateDeleted(dtf.format(now));
         importGoodsRepository.save(importGoods);
     }
@@ -141,5 +166,4 @@ public class ImportServiceImpl implements ImportService {
         ImportDetail importDetail = importDetailRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + id));
         importDetailRepository.delete(importDetail);
     }
-
 }

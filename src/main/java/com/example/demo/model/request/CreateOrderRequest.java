@@ -17,28 +17,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateOrderRequest {
-
-//    @NotNull(message="Họ khách hàng rỗng")
-//    @NotEmpty(message="Họ khách hàng rỗng")
-//    @Size(min=3,max=50,message="Họ khách hàng từ 3-50 ký tự")
-//    private String firstname;
-//
-//    @NotNull(message="Tên khách hàng rỗng")
-//    @NotEmpty(message="Tên khách hàng rỗng")
-//    @Size(min=3,max=50,message="Tên khách hàng từ 3-50 ký tự")
-//    private String lastname;
-
-//    private String promotionCode;
-
-//    @NotNull(message = "Email rỗng")
-//    @NotEmpty(message = "Email rỗng")
-//    @Email(message = "Email không đúng định dạng")
-//    private String email;
-//
-//    @NotNull(message="Số điện thoại rỗng")
-//    @NotEmpty(message="Số điện thoại rỗng")
-//    private String phone;
-
     private String username;
 
     @NotNull(message="Tên địa chỉ rỗng")
@@ -46,12 +24,7 @@ public class CreateOrderRequest {
     private String address;
 
     private String promotionCode;
-//    private Set<Long> states;
-//    private String state;
     private String note;
-
-//    private long totalPrice;
     private List<CreateOrderDetailRequest> orderDetails;
-
 }
 

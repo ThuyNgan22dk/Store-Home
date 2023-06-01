@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateImportDetailRequest {
-
     @NotNull(message="Tên sản phẩm rỗng")
     @NotEmpty(message = "Tên sản phẩm rỗng")
     @Size(min=5,max=50,message="Tên sản phẩm từ 5-50 ký tự")
@@ -30,11 +29,6 @@ public class CreateImportDetailRequest {
     @Size(min = 1,message="Số lượng sản phẩm từ 1 trở lên")
     private int quantity;
 
-//    @NotNull(message = "Danh mục rỗng")
-//    @NotEmpty(message = "Danh mục rỗng")
-//    @Schema(description = "ID của danh mục",example="1")
-//    private long categoryId;
-
     @NotNull(message = "Hạn sử dụng rỗng")
     @NotEmpty(message="Hạn sử dụng rỗng")
     @Schema(description = "Hạn sử dụng sản phẩm",example="yyyy-MM-dd")
@@ -45,6 +39,4 @@ public class CreateImportDetailRequest {
     @NotEmpty
     @Schema(example="1")
     private Long importGoodId;
-
-//    private long subTotal;
 }

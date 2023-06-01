@@ -27,7 +27,6 @@ public class OrderDetail {
     @JoinColumn(name ="cart_id")
     private Cart cart;
 
-//    private String promotionCode;
     private long subTotal;
 
     @ManyToOne

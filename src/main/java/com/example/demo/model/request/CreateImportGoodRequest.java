@@ -14,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateImportGoodRequest {
-
     @NotNull(message="Họ khách hàng rỗng")
     @NotEmpty(message="Họ khách hàng rỗng")
     @Size(min=0,max=50,message="Họ khách hàng từ 3-50 ký tự")
@@ -25,11 +24,7 @@ public class CreateImportGoodRequest {
     private String phoneShipper;
 
     private String note;
-
-//    private long totalPrice;
-
     private List<CreateImportDetailRequest> importDetails;
-
 }
 
 

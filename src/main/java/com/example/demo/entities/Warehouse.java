@@ -24,5 +24,4 @@ public class Warehouse {
     @Column(name = "date_expiry")
     private String expiry;
     private String typeWarehouse;
-
 }

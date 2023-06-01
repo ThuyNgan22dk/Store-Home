@@ -11,4 +11,7 @@ import java.util.List;
 public interface OrderStateRepository extends JpaRepository<OrderState,Long>{
     @Query(value = "Select * from order_state where order_id = :order_id",nativeQuery = true)
     List<OrderState> getListByOrderId (long order_id);
+
+    @Query(value = "Select * from order_state where order_id = :order_id and state = :state",nativeQuery = true)
+    OrderState checkState (long order_id, String state);
 }

@@ -29,6 +29,10 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    public DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+    public LocalDateTime now = LocalDateTime.now();
+
     @Override
     public Cart createCart(CreateCartRequest rq) {
         Product product = productRepository.findByProductname(rq.getName()).orElseThrow(() -> new NotFoundException("Not Found User With Product:" + rq.getName()));
@@ -38,7 +42,6 @@ public class CartServiceImpl implements CartService {
             cart.setUser(user);
             cart.setName(rq.getName());
             cart.setProduct(product);
-
             cart.setPrice(product.getPrice());
             cart.setExpiry(product.getExpiry());
             cart.setQuantity(rq.getQuantity());
@@ -52,14 +55,15 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart changeQuantityProductOnCart(CreateChangeCartRequest rq){
+//        Cart cart = new Cart();
         User user = userRepository.findByUsername(rq.getUsername()).orElseThrow(() -> new NotFoundException("Not Found User With Username:" + rq.getUsername()));
+//        cart.setUser(user);
+//        cart.setName(rq.getName());
         Product product = productRepository.findByProductname(rq.getName()).orElseThrow(() -> new NotFoundException("Not Found User With Product:" + rq.getName()));
         Cart cart = cartRepository.findProductOnCart(product.getId(), user.getId());
         if ((rq.getQuantity() + rq.getQuantityAdd()) <= product.getQuantity()) {
             cart.setQuantity(rq.getQuantity() + rq.getQuantityAdd());
             cart.setTotal(cart.getPrice() * cart.getQuantity());
-            System.out.println(cart.getQuantity());
-//            cartRepository.save(cart);
         }
         return cart;
     }
@@ -71,8 +75,9 @@ public class CartServiceImpl implements CartService {
             cart.setQuantity(quantity);
             cart.setTotal(cart.getPrice() * cart.getQuantity());
             cartRepository.save(cart);
+        } else {
+            System.out.println("Khong the cap nhat");
         }
-        System.out.println("Khong the cap nhat");
         return cart;
     }
 
@@ -80,8 +85,6 @@ public class CartServiceImpl implements CartService {
     public void deleteCart(long cartId, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found User With username: " + username));
         Cart cart = cartRepository.findProductByIdAndUser(cartId, user.getId());
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
         cart.setDateDeleted(dtf.format(now));
         cartRepository.save(cart);
     }
@@ -93,7 +96,6 @@ public class CartServiceImpl implements CartService {
         for (Cart cart: list){
             if (cart.getDateDeleted() == null) {
                 carts.add(cart);
-//                System.out.println(cart);
             }
         }
         return carts;
@@ -107,7 +109,6 @@ public class CartServiceImpl implements CartService {
         for (Cart cart: list){
             if (cart.getDateDeleted() == null) {
                 carts.add(cart);
-//                System.out.println(cart);
             }
         }
         return carts;

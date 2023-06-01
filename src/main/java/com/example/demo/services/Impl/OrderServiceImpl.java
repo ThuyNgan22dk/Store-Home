@@ -20,7 +20,6 @@ import com.example.demo.services.OrderService;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-
     @Autowired
     private OrderRepository orderRepository;
 
@@ -56,11 +55,7 @@ public class OrderServiceImpl implements OrderService {
         order.setPhone(user.getPhone());
         order.setAddress(request.getAddress());
         order.setNote(request.getNote());
-        //Date-time
-//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-//        LocalDateTime now = LocalDateTime.now();
         order.setDateCreated(dtf.format(now));
-
         orderRepository.save(order);
         long totalPrice = 0;
         for(CreateOrderDetailRequest rq: request.getOrderDetails()){
@@ -69,13 +64,12 @@ public class OrderServiceImpl implements OrderService {
             if (warehouseServise.addOrder(changeWarehouseRequest)){
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail = getOrderDetail(cart, orderDetail, rq);
+                orderDetail.setCart(cart);
                 orderDetail.setOrder(order);
                 totalPrice += orderDetail.getSubTotal();
                 orderDetailRepository.save(orderDetail);
                 cart.setDateDeleted(dtf.format(now));
                 cartRepository.save(cart);
-            } else {
-//                System.out.println("Khong the dat hang");
             }
         }
         if (request.getPromotionCode() != null) {
@@ -91,9 +85,6 @@ public class OrderServiceImpl implements OrderService {
         } else {
             order.setTotalPrice(totalPrice);
         }
-//        Set<OrderState> orderStates = new HashSet<>();
-//        orderStates.add(setStateOrder(order.getId(), 1));
-//        order.setStating(setStateOrder(order.getId(), 1).getState());
         setStateOrder(order.getId(), 1);
         order.setUser(user);
         orderRepository.save(order);
@@ -102,6 +93,16 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getList() {
         return orderRepository.findAll(Sort.by("id").descending());
+    }
+
+    @Override
+    public long totalAllOrder(){
+        List<Order> listOrder = orderRepository.findAll();
+        long totalOrder = 0;
+        for (Order order : listOrder) {
+            totalOrder += order.getTotalPrice();
+        }
+        return totalOrder;
     }
 
     @Override
@@ -114,12 +115,38 @@ public class OrderServiceImpl implements OrderService {
     public void setStateOrder(long orderId, int stateNumber) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Not Found User With Username:" + orderId));
         OrderState orderState = new OrderState();
+        System.out.println(orderStateRepository.checkState(orderId, "Đơn đã đặt"));
         switch (stateNumber){
-            case 1: orderState.setState("Đơn đã đặt");
-            case 2: orderState.setState("Đang chuẩn bị");
-            case 3: orderState.setState("Đang giao hàng");
-            case 4: orderState.setState("Giao hàng thành công");
-            default: orderState.setState("Không thành công");
+            case 1: {
+                if (orderStateRepository.checkState(orderId, "Đơn đã đặt") == null){
+                    orderState.setState("Đơn đã đặt");
+                }
+                break;
+            }
+            case 2: {
+                if (orderStateRepository.checkState(orderId, "Đang chuẩn bị") == null){
+                    orderState.setState("Đang chuẩn bị");
+                }
+                break;
+            }
+            case 3: {
+                if (orderStateRepository.checkState(orderId, "Đang giao hàng") == null){
+                    orderState.setState("Đang giao hàng");
+                }
+                break;
+            }
+            case 4: {
+                if (orderStateRepository.checkState(orderId, "Giao hàng thành công") == null){
+                    orderState.setState("Giao hàng thành công");
+                }
+                break;
+            }
+            default: {
+                if (orderStateRepository.checkState(orderId, "Không thành công") == null){
+                    orderState.setState("Không thành công");
+                }
+                break;
+            }
         }
         orderState.setDatetime(dtf.format(now));
         orderState.setOrder(order);

@@ -38,5 +38,8 @@ public class CreateUserRequest {
     @Schema(description="Mật khẩu",example="123456")
     private String confirmPassword;
 
+    @Schema(description="Mảng Id của hình ảnh",example="[1,2,3]")
+    private Set<Long> imageIds;
+
     private Set<String> role;
 }
