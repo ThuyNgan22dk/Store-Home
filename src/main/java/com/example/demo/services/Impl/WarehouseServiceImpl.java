@@ -24,12 +24,6 @@ public class WarehouseServiceImpl implements WarehouseServise {
     @Autowired
     private WarehouseRepository warehouseRepository;
 
-    @Autowired
-    private ImportService importService;
-
-    @Autowired
-    private OrderService orderService;
-
     @Override
     public List<Warehouse> getList() {
         return warehouseRepository.findAll(Sort.by("id").descending());
@@ -40,12 +34,10 @@ public class WarehouseServiceImpl implements WarehouseServise {
         return warehouseRepository.getListType(type);
     }
 
-
-
     @Override
     public void revenueStatistics() {
-        long totalImport = importService.totalAllImport();
-        long totalOrder = orderService.totalAllOrder();
+//        long totalImport = importService.totalAllImport();
+//        long totalOrder = orderService.totalAllOrder();
     }
 
     @Override

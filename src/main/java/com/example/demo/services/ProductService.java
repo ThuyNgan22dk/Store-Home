@@ -14,8 +14,6 @@ public interface ProductService {
     List<Product> findRelatedProduct(long id);
     List<Product> findProductForUser();
 
-    List<Product> findProductForUser();
-
     List<Product> getListProductByCategory(long id);
 
     List<Product> getListByPriceRange(long id,int min, int max);

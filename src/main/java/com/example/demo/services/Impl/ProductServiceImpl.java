@@ -138,11 +138,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> findProductForUser(){
-        return productRepository.findProduct();
-    }
-
-    @Override
     public List<Product> getListProductByCategory(long id){
         return productRepository.getListProductByCategory(id);
     }
