@@ -41,6 +41,33 @@ public class ProductController {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/suggest/{username}")
+    @Operation(summary="Lấy ra danh sách sản phẩm đề xuất")
+    public ResponseEntity<List<Product>> getListSuggest(@PathVariable String username){
+        List<Product> list = productService.getListSuggestProduct(username);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/suggest")
+    @Operation(summary="Lấy ra danh sách sản phẩm đề xuất")
+    public ResponseEntity<List<Product>> getListSuggestNoUser(){
+        List<Product> list = productService.getListRan();
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/sortAsc")
+    @Operation(summary="Lấy ra danh sách sản phẩm")
+    public ResponseEntity<List<Product>> getListSortUpAsc(){
+        List<Product> list = productService.getListSortUpAsc();
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/sortDesc")
+    @Operation(summary="Lấy ra danh sách sản phẩm")
+    public ResponseEntity<List<Product>> getListSortDesc(){
+        List<Product> list = productService.getListSortDesc();
+        return ResponseEntity.ok(list);
+    }
 
     @GetMapping("/newest/{number}")
     @Operation(summary="Lấy ra danh sách sản phẩm mới nhất giới hạn số lượng = number")
@@ -73,8 +100,8 @@ public class ProductController {
     @GetMapping("/range")
     @Operation(summary="Lấy ra danh sách sản phẩm ở các mức giá từ min đến max")
     public ResponseEntity<List<Product>> getListProductByPriceRange(@RequestParam("id") long id,@RequestParam("min") int min, @RequestParam("max") int max){
-        min*=1000;
-        max*=1000;
+//        min*=1000;
+//        max*=1000;
 //        System.out.println("min: " + min + " max: " + max);
         List<Product> list = productService.getListByPriceRange(id, min, max);
         return ResponseEntity.ok(list);

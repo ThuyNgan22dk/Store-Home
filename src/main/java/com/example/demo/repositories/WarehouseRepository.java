@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
-    @Query(value = "Select * from Warehouse where typeWarehouse = :type order by id desc",nativeQuery = true)
+    @Query(value = "Select * from Warehouse where type_warehouse = :type order by id desc",nativeQuery = true)
     List<Warehouse> getListType(String type);
 }

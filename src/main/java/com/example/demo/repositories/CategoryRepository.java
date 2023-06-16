@@ -12,4 +12,7 @@ import com.example.demo.entities.Category;
 public interface CategoryRepository extends JpaRepository<Category,Long> {
     @Query("Select c from Category c where c.enable = true")
     List<Category> findALLByEnabled();
+
+    @Query(value = "Select * from Category where name = :name and enable = true", nativeQuery = true)
+    Category findCategoryByName(String name);
 }

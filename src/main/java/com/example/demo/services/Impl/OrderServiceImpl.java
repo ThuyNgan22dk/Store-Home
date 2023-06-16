@@ -2,6 +2,7 @@ package com.example.demo.services.Impl;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.demo.entities.*;
@@ -41,7 +42,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private PromotionService promotionService;
 
-    public DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+    public DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public LocalDateTime now = LocalDateTime.now();
 
     @Override
@@ -49,13 +51,31 @@ public class OrderServiceImpl implements OrderService {
         // TODO Auto-generated method stub
         Order order = new Order();
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new NotFoundException("Not Found User With Username:" + request.getUsername()));
-        order.setFirstname(user.getFirstname());
-        order.setLastname(user.getLastname());
         order.setEmail(user.getEmail());
-        order.setPhone(user.getPhone());
+        if(request.getFirstname() == null){
+            order.setFirstname(user.getFirstname());
+        } else {
+            order.setFirstname(request.getFirstname());
+            user.setFirstname(request.getFirstname());
+        }
+        if(request.getLastname() == null){
+            order.setLastname(user.getLastname());
+        } else {
+            order.setLastname(request.getLastname());
+            user.setLastname(request.getLastname());
+        }
+        if(request.getPhone() == null){
+            order.setPhone(user.getPhone());
+        } else {
+            order.setPhone(request.getPhone());
+            user.setPhone(request.getPhone());
+        }
         order.setAddress(request.getAddress());
+        user.setAddress(request.getAddress());
+        user.setCountry(request.getCountry());
         order.setNote(request.getNote());
         order.setDateCreated(dtf.format(now));
+        order.setDateTime(dtf2.format(now));
         orderRepository.save(order);
         long totalPrice = 0;
         for(CreateOrderDetailRequest rq: request.getOrderDetails()){
@@ -74,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
         }
         if (request.getPromotionCode() != null) {
             Promotion promotion = promotionService.findCode(request.getPromotionCode());
-            order.setPromotionCode(request.getPromotionCode());
+            order.setPromotion(promotion);
             System.out.println(promotion);
             order.setTotalPrice(totalPrice * (100 - promotion.getPercent()) / 100);
             if (promotion.getQuantity() == 1) {
@@ -92,7 +112,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getList() {
-        return orderRepository.findAll(Sort.by("id").descending());
+        List<Order> orderList = orderRepository.findAll();
+        List<Order> list = new ArrayList<>();
+        for(Order order: orderList){
+            if (order.getDateDeleted() == null) {
+                list.add(order);
+            }
+        }
+        return list;
     }
 
     @Override
@@ -100,7 +127,21 @@ public class OrderServiceImpl implements OrderService {
         List<Order> listOrder = orderRepository.findAll();
         long totalOrder = 0;
         for (Order order : listOrder) {
-            totalOrder += order.getTotalPrice();
+            if (order.getDateDeleted() == null) {
+                totalOrder += order.getTotalPrice();
+            }
+        }
+        return totalOrder;
+    }
+
+    @Override
+    public long getOrderForChart(String date){
+        List<Order> listOrder = orderRepository.getOrderDay(date);
+        long totalOrder = 0;
+        for (Order order : listOrder) {
+            if (order.getDateDeleted() == null) {
+                totalOrder += order.getTotalPrice();
+            }
         }
         return totalOrder;
     }
@@ -115,7 +156,7 @@ public class OrderServiceImpl implements OrderService {
     public void setStateOrder(long orderId, int stateNumber) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Not Found User With Username:" + orderId));
         OrderState orderState = new OrderState();
-        System.out.println(orderStateRepository.checkState(orderId, "Đơn đã đặt"));
+//        System.out.println(orderStateRepository.checkState(orderId, "Đơn đã đặt"));
         switch (stateNumber){
             case 1: {
                 if (orderStateRepository.checkState(orderId, "Đơn đã đặt") == null){

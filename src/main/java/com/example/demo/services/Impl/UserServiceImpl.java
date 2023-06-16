@@ -65,6 +65,10 @@ public class UserServiceImpl implements UserService {
             });
         }
         user.setDateCreated(dtf.format(now));
+//        Set<Image> images = new HashSet<>();
+//        Image image = imageRepository.findById(77L).orElseThrow(() -> new RuntimeException("Error: Image is not found."));
+//        images.add(image);
+//        user.setImages(images);
         user.setEnabled(true);
         user.setRoles(roles);
         userRepository.save(user);

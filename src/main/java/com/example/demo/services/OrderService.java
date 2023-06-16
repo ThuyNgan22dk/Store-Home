@@ -9,10 +9,11 @@ import com.example.demo.model.request.CreateOrderDetailRequest;
 import com.example.demo.model.request.CreateOrderRequest;
 
 public interface OrderService {
-
     void placeOrder(CreateOrderRequest request);
 
     List<Order> getList();
+
+    long getOrderForChart(String date);
 
     long totalAllOrder();
 

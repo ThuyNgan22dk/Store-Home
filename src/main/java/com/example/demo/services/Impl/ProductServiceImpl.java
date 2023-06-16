@@ -1,14 +1,12 @@
 package com.example.demo.services.Impl;
 
-import com.example.demo.entities.Category;
-import com.example.demo.entities.Image;
-import com.example.demo.entities.Product;
+import com.example.demo.entities.*;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.request.CreateProductRequest;
-import com.example.demo.repositories.CategoryRepository;
-import com.example.demo.repositories.ImageRepository;
-import com.example.demo.repositories.ProductRepository;
+import com.example.demo.repositories.*;
 import com.example.demo.services.ProductService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -17,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 @Service
 public class ProductServiceImpl implements ProductService {
     @Autowired
@@ -26,7 +25,13 @@ public class ProductServiceImpl implements ProductService {
     private CategoryRepository categoryRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
 
     public DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
     public LocalDateTime now = LocalDateTime.now();
@@ -45,14 +50,103 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> getListSuggestProduct(String username){
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found Product With username: " + username));
+        List<Cart> carts = cartRepository.getCartByUser(user.getId());
+        List<Product> productList = new ArrayList<>();
+        List<String> categoryName = new ArrayList<>();
+        boolean check = false;
+        int count = 1;
+        List<Integer> listCountCate = new ArrayList<>();
+        if (carts.size() == 0){
+            productList = getListRan();
+        } else {
+            if (carts.size() == 1) {
+                Cart cart = carts.get(0);
+                categoryName.add(cart.getProduct().getCategory().getName());
+            }
+            if (carts.size() > 1){
+                listCountCate.add(1);
+                categoryName.add(carts.get(1).getProduct().getCategory().getName());
+                for (Cart cart: carts) {
+                    check = false;
+                    for (int j = 0; j < count; j++) {
+                        if (categoryName.get(j).equals(cart.getProduct().getCategory().getName())) {
+                            check = true;
+                            listCountCate.set(j,listCountCate.get(j) + 1);
+                            break;
+                        }
+                    }
+                    if (!check) {
+                        listCountCate.add(1);
+                        categoryName.add(cart.getProduct().getCategory().getName());
+                        count++;
+                    }
+                }
+                String temp;    Integer temp1;
+                for (int i = 0 ; i < listCountCate.size() - 1; i++) {
+                    for (int j = i + 1; j < listCountCate.size(); j++) {
+                        if (listCountCate.get(i) < listCountCate.get(j)) {
+                            temp1 = listCountCate.get(j);
+                            listCountCate.set(j,listCountCate.get(i));
+                            listCountCate.set(i, temp1);
+                            temp = categoryName.get(j);
+                            categoryName.set(j,categoryName.get(i));
+                            categoryName.set(i, temp);
+                        }
+                    }
+                }
+            }
+
+            List<Category> categoryList = categoryRepository.findAll();
+            for (Category category: categoryList){
+                check = false;
+                for (int j = 0; j < count; j++) {
+                    if (categoryName.get(j).equals(category.getName())) {
+                        check = true;
+                        break;
+                    }
+                }
+                if (!check) {
+                    listCountCate.add(1);
+                    categoryName.add(category.getName());
+                    count++;
+                }
+            }
+
+            for (int i = 0; i < listCountCate.size(); i++){
+                Category category = categoryRepository.findCategoryByName(categoryName.get(i));
+                List<Product> products = productRepository.getProductByCategory(category.getId());
+                productList.addAll(products);
+            }
+        }
+        return productList;
+    }
+
+    @Override
     public List<Product> findProductForUser(){
         return productRepository.findProduct();
+    }
+
+    @Override
+    public List<Product> getListRan(){
+        return productRepository.getListRan();
     }
 
     @Override
     public Product getProduct(long id) {
         // TODO Auto-generated method stub
         return productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + id));
+    }
+
+    @Override
+    public List<Product> getListSortUpAsc(){
+        return productRepository.getSortUpAsc();
+    }
+
+    @Override
+    public List<Product> getListSortDesc(){
+        return productRepository.getSortDesc();
     }
 
     @Override
@@ -73,11 +167,11 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(category);
         product.setPrice(request.getPrice());
         if (product.getQuantity() <= 0) {
-            product.setInventoryStatus("OUTOFSTOCK");
+            product.setInventoryStatus("Hết hàng");
         } else if (product.getQuantity() < 10) {
-            product.setInventoryStatus("LOWSTOCK");
+            product.setInventoryStatus("Còn ít");
         } else {
-            product.setInventoryStatus("INSTOCK");
+            product.setInventoryStatus("Sẵn có");
         }
         Set<Image> images = new HashSet<>();
         for(long imageId: request.getImageIds()){

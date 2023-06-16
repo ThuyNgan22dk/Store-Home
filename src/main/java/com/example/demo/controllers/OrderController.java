@@ -47,17 +47,22 @@ public class OrderController {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/totalOrder")
+    public ResponseEntity<?> getTotalOrder(){
+        long totalOrder = orderService.totalAllOrder();
+        return ResponseEntity.ok(totalOrder);
+    }
+
+    @GetMapping("/totalDay/{day}")
+    public ResponseEntity<?> getTotalDayOrder(@PathVariable String day){
+        long totalDayOrder = orderService.getOrderForChart(day);
+        return ResponseEntity.ok(totalDayOrder);
+    }
+
     @GetMapping("/orderDetail")
     public ResponseEntity<List<OrderDetail>> getListDetailNull(){
         return null;
     }
-
-//    @GetMapping("/importDetail/{ig_id}")
-//    @Operation(summary="Lấy ra danh sách chi tiết các sản phẩm trong đơn mua hàng")
-//    public ResponseEntity<List<OrderDetail>> getListDetail(@PathVariable Long ig_id){
-//        List<OrderDetail> list = orderService.getOrderDetail(ig_id);
-//        return ResponseEntity.ok(list);
-//    }
 
     @PutMapping("/{id}/{state}")
     @Operation(summary="Đặt hàng sản phẩm")

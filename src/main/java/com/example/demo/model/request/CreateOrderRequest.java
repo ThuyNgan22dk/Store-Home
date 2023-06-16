@@ -18,6 +18,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateOrderRequest {
     private String username;
+    private String firstname;
+    private String lastname;
+    private String phone;
+    private String country;
 
     @NotNull(message="Tên địa chỉ rỗng")
     @NotEmpty(message="Tên địa chỉ rỗng")

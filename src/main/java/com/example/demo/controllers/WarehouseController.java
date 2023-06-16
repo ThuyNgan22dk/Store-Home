@@ -5,10 +5,8 @@ import com.example.demo.services.WarehouseServise;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -19,9 +17,16 @@ public class WarehouseController {
     private WarehouseServise warehouseServise;
 
     @GetMapping("/")
-    @Operation(summary="Lấy danh sách mã giảm giá")
-    public ResponseEntity<?> getListPromotion(){
+    @Operation(summary="Lấy danh sách")
+    public ResponseEntity<?> getList(){
         List<Warehouse> warehouses = warehouseServise.getList();
+        return ResponseEntity.ok(warehouses);
+    }
+
+    @GetMapping("/{type}")
+    @Operation(summary="Lấy danh sách")
+    public ResponseEntity<?> getListType(@PathVariable String type){
+        List<Warehouse> warehouses = warehouseServise.getListType(type);
         return ResponseEntity.ok(warehouses);
     }
 }

@@ -28,7 +28,8 @@ public class ImportServiceImpl implements ImportService {
     @Autowired
     private WarehouseServise warehouseServise;
 
-    public DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+    public DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public LocalDateTime now = LocalDateTime.now();
 
     @Override
@@ -42,6 +43,7 @@ public class ImportServiceImpl implements ImportService {
         importGoods.setNameShipper(request.getNameShipper());
         importGoods.setPhoneShipper(request.getPhoneShipper());
         importGoods.setNote(request.getNote());
+        importGoods.setDateTime(dtf2.format(now));
         //Date-time
         importGoods.setDateCreated(dtf.format(now));
         importGoodsRepository.save(importGoods);
@@ -71,8 +73,22 @@ public class ImportServiceImpl implements ImportService {
     public long totalAllImport(){
         List<ImportGoods> listImport = importGoodsRepository.findAll();
         long totalImport = 0;
-        for (ImportGoods importGoods : listImport) {
-            totalImport += importGoods.getTotalPrice();
+        for (ImportGoods importGood : listImport) {
+            if (importGood.getDateDeleted() == null) {
+                totalImport += importGood.getTotalPrice();
+            }
+        }
+        return totalImport;
+    }
+
+    @Override
+    public long getImportForChart(String date){
+        List<ImportGoods> listImport = importGoodsRepository.getImportDay(date);
+        long totalImport = 0;
+        for (ImportGoods importGood : listImport) {
+            if (importGood.getDateDeleted() == null) {
+                totalImport += importGood.getTotalPrice();
+            }
         }
         return totalImport;
     }
@@ -105,30 +121,34 @@ public class ImportServiceImpl implements ImportService {
         long temp = 0;
         switch (product.getUnit()){
             case "Thùng": {
-                temp = 20000L;
-                break;
-            }
-            case "Lốc": {
-                temp = 8000L;
-                break;
-            }
-            case "Hộp": {
                 temp = 10000L;
                 break;
             }
-            default: {
+            case "Lốc": {
+                temp = 4000L;
+                break;
+            }
+            case "Hộp": {
                 temp = 5000L;
+                break;
+            }
+            case "Gói":{
+                temp = 3000L;
+                break;
+            }
+            default: {
+                temp = 1000L;
                 break;
             }
         }
         product.setPrice(rq.getPrice() + temp);
         product.setExpiry(rq.getExpiry());
         if (product.getQuantity() <= 0) {
-            product.setInventoryStatus("OUTOFSTOCK");
+            product.setInventoryStatus("Hết hàng");
         } else if (product.getQuantity() < 10) {
-            product.setInventoryStatus("LOWSTOCK");
+            product.setInventoryStatus("Còn ít");
         } else {
-            product.setInventoryStatus("INSTOCK");
+            product.setInventoryStatus("Sẵn có");
         }
         importDetail.setCategory(product.getCategory());
         productRepository.save(product);

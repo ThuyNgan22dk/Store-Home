@@ -19,8 +19,12 @@ public interface ProductService {
     List<Product> getListByPriceRange(long id,int min, int max);
 
     List<Product> searchProduct(String keyword);
+    List<Product> getListSortUpAsc();
+    List<Product> getListSortDesc();
+    List<Product> getListSuggestProduct(String username);
 
     Product getProduct(long id);
+    List<Product> getListRan();
 
     Product createProduct(CreateProductRequest request);
 

@@ -23,6 +23,10 @@ public class ImportGoods {
     private String note;
     private long totalPrice;
 
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @Column(name = "date_time")
+    private String dateTime;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @Column(name = "date_created")
     private String dateCreated;

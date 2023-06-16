@@ -1,6 +1,5 @@
 package com.example.demo.entities;
 
-import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 
@@ -22,12 +21,18 @@ public class Order {
     private String firstname;
     private String lastname;
     private String address;
-    private String promotionCode;
+    @OneToOne
+    @JoinColumn(name="promotion_id")
+    private Promotion promotion;
     private String email;
     private String phone;
     private String note;
     private long totalPrice;
     private String stating;
+
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @Column(name = "date_time")
+    private String dateTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @Column(name = "date_created")

@@ -35,23 +35,17 @@ public class WarehouseServiceImpl implements WarehouseServise {
     }
 
     @Override
-    public void revenueStatistics() {
-//        long totalImport = importService.totalAllImport();
-//        long totalOrder = orderService.totalAllOrder();
-    }
-
-    @Override
     public boolean addOrder(ChangeWarehouseRequest request) {
         Warehouse warehouse = new Warehouse();
         Product product = productRepository.findByProductname(request.getProductname()).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + request.getProductname()));
         if (product.getQuantity() >= request.getQuantity()) {
             product.setQuantity(product.getQuantity() - request.getQuantity());
             if (product.getQuantity() <= 0) {
-                product.setInventoryStatus("OUTOFSTOCK");
+                product.setInventoryStatus("Hết hàng");
             } else if (product.getQuantity() < 10) {
-                product.setInventoryStatus("LOWSTOCK");
+                product.setInventoryStatus("Còn ít");
             } else {
-                product.setInventoryStatus("INSTOCK");
+                product.setInventoryStatus("Sẵn có");
             }
             warehouse.setProduct(product);
             warehouse.setTypeWarehouse("order");
@@ -63,11 +57,6 @@ public class WarehouseServiceImpl implements WarehouseServise {
             return false;
         }
     }
-
-//    @Override
-//    public void deleteWasehouse(long id){
-//        warehouseRepository.deleteById(id);
-//    }
 
     @Override
     public void addImport(ChangeWarehouseRequest request) {

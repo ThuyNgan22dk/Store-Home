@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class User {
     private String firstname;
     private String lastname;
     @Column(name="email",unique = true)
+    @Email
     private String email;
     private String address;
     private String phone;

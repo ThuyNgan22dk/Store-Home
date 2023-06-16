@@ -10,8 +10,6 @@ public interface WarehouseServise {
 
     List<Warehouse> getListType(String type);
 
-    void revenueStatistics();
-
     boolean addOrder(ChangeWarehouseRequest request);
 //    void deleteWasehouse(long id);
 

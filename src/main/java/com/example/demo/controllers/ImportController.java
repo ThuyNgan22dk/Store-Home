@@ -39,6 +39,18 @@ public class ImportController {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/totalImport")
+    public ResponseEntity<?> getTotalImport(){
+        long totalImport = importService.totalAllImport();
+        return ResponseEntity.ok(totalImport);
+    }
+
+    @GetMapping("/totalDay/{day}")
+    public ResponseEntity<?> getTotalDayImport(@PathVariable String day){
+        long totalDayImport = importService.getImportForChart(day);
+        return ResponseEntity.ok(totalDayImport);
+    }
+
     @PostMapping("/importDetail/create")
     @Operation(summary="Tạo mới sản phẩm trong danh sách đơn mua hàng")
     public ResponseEntity<?> createProductImport(@RequestBody CreateImportDetailRequest request){
