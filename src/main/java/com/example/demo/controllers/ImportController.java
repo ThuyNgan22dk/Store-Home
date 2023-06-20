@@ -51,6 +51,18 @@ public class ImportController {
         return ResponseEntity.ok(totalDayImport);
     }
 
+//    @GetMapping("/listDate")
+//    public ResponseEntity<?> getListDateForChartLine (){
+//        List<String> listDate = importService.getDatesForChartLine();
+//        return ResponseEntity.ok(listDate);
+//    }
+//
+//    @GetMapping("/listTotal")
+//    public ResponseEntity<?> getListTotalForChartLine (@RequestParam("dates") List<String> dates){
+//        List<Long> listTotal = importService.getTotalForChartLine(dates);
+//        return ResponseEntity.ok(listTotal);
+//    }
+
     @PostMapping("/importDetail/create")
     @Operation(summary="Tạo mới sản phẩm trong danh sách đơn mua hàng")
     public ResponseEntity<?> createProductImport(@RequestBody CreateImportDetailRequest request){

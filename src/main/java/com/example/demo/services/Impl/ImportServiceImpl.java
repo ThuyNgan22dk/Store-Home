@@ -94,6 +94,46 @@ public class ImportServiceImpl implements ImportService {
     }
 
     @Override
+    public List<String> getDatesForChartLine(){
+        List<ImportGoods> importGoods = getList();
+        List<String> dates = new ArrayList<>();
+        boolean check;
+        int count = 1;
+        dates.add(importGoods.get(0).getDateTime());
+        for (ImportGoods imGoods: importGoods){
+            check = false;
+            for (int j = 0; j < count; j++) {
+                if (dates.get(j).equals(imGoods.getDateTime())) {
+                    check = true;
+                    break;
+                }
+            }
+            if (!check) {
+                dates.add(imGoods.getDateTime());
+                count++;
+            }
+        }
+        return dates;
+    }
+
+    @Override
+    public List<Long> getTotalForChartLine(List<String> dates){
+        List<Long> listTotalDate = new ArrayList<>();
+        long totalOrder;
+        for (String date: dates){
+            List<ImportGoods> goodsList = importGoodsRepository.getImportDay(date);
+            totalOrder = 0;
+            for (ImportGoods imGoods : goodsList) {
+                if (imGoods.getDateDeleted() == null) {
+                    totalOrder += imGoods.getTotalPrice();
+                }
+            }
+            listTotalDate.add(totalOrder);
+        }
+        return listTotalDate;
+    }
+
+    @Override
     public List<ImportDetail> getListDetail(Long ig_id){
         List<ImportDetail> detailList = importDetailRepository.getListDetailById(ig_id);
         ImportGoods importGoods = importGoodsRepository.findById(ig_id).orElseThrow(() -> new NotFoundException("Not Found Product With Id: " + ig_id));;

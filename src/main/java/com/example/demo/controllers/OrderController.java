@@ -47,10 +47,24 @@ public class OrderController {
         return ResponseEntity.ok(list);
     }
 
+
+
     @GetMapping("/totalOrder")
     public ResponseEntity<?> getTotalOrder(){
         long totalOrder = orderService.totalAllOrder();
         return ResponseEntity.ok(totalOrder);
+    }
+
+    @GetMapping("/listDate")
+    public ResponseEntity<?> getListDateForChartLine (){
+        List<String> listDate = orderService.getDatesForChartLine();
+        return ResponseEntity.ok(listDate);
+    }
+
+    @GetMapping("/listTotal")
+    public ResponseEntity<?> getListTotalForChartLine (@RequestParam("dates") List<String> dates){
+        List<Long> listTotal = orderService.getOrderForChartLine(dates);
+        return ResponseEntity.ok(listTotal);
     }
 
     @GetMapping("/totalDay/{day}")

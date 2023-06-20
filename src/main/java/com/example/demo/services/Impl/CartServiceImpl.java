@@ -60,11 +60,19 @@ public class CartServiceImpl implements CartService {
 //        cart.setUser(user);
 //        cart.setName(rq.getName());
         Product product = productRepository.findByProductname(rq.getName()).orElseThrow(() -> new NotFoundException("Not Found User With Product:" + rq.getName()));
-        Cart cart = cartRepository.findProductOnCart(product.getId(), user.getId());
+        List<Cart> carts = cartRepository.findProductOnCart(product.getId(), user.getId());
+        Cart cart = new Cart();
+        for (Cart carttemp: carts){
+            if (carttemp.getDateDeleted() == null){
+                cart = carttemp;
+                break;
+            }
+        }
         if ((rq.getQuantity() + rq.getQuantityAdd()) <= product.getQuantity()) {
             cart.setQuantity(rq.getQuantity() + rq.getQuantityAdd());
             cart.setTotal(cart.getPrice() * cart.getQuantity());
         }
+        cartRepository.save(cart);
         return cart;
     }
 

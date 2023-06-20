@@ -147,9 +147,56 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<String> getDatesForChartLine(){
+        List<Order> orders = getList();
+        List<String> dates = new ArrayList<>();
+        boolean check;
+        int count = 1;
+        dates.add(orders.get(0).getDateTime());
+        for (Order order: orders){
+            check = false;
+            for (int j = 0; j < count; j++) {
+                if (dates.get(j).equals(order.getDateTime())) {
+                    check = true;
+                    break;
+                }
+            }
+            if (!check) {
+                dates.add(order.getDateTime());
+                count++;
+            }
+        }
+        return dates;
+    }
+
+    @Override
+    public List<Long> getOrderForChartLine(List<String> dates){
+        List<Long> listTotalDate = new ArrayList<>();
+        long totalOrder;
+        for (String date: dates){
+            List<Order> listOrder = orderRepository.getOrderDay(date);
+            totalOrder = 0;
+            for (Order order : listOrder) {
+                if (order.getDateDeleted() == null) {
+                    totalOrder += order.getTotalPrice();
+                }
+            }
+            listTotalDate.add(totalOrder);
+        }
+        return listTotalDate;
+    }
+
+    @Override
     public List<Order> getOrderByUser(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found User With Username:" + username));
-        return orderRepository.getOrderByUser(user.getId());
+        List<Order> orders = orderRepository.getOrderByUser(user.getId());
+        List<Order> list = new ArrayList<>();
+        for (Order order: orders){
+            if (order.getDateDeleted() == null){
+                list.add(order);
+            }
+        }
+        return list;
     }
 
     @Override

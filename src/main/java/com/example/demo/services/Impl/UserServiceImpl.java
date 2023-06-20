@@ -7,6 +7,7 @@ import com.example.demo.model.request.ChangePasswordRequest;
 import com.example.demo.model.request.CreateUserRequest;
 import com.example.demo.model.request.UpdateProfileRequest;
 import com.example.demo.repositories.ImageRepository;
+import com.example.demo.services.ImageService;
 import org.springframework.data.domain.Sort;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
@@ -26,9 +27,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepository;
-
-    @Autowired
-    private ImageRepository imageRepository;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -95,7 +93,7 @@ public class UserServiceImpl implements UserService {
         List<User> userList = userRepository.findAll(Sort.by("id").descending());
         List<User> list = new ArrayList<>();
         for(User user: userList){
-            if (!user.getUsername().equals("admin")) list.add(user);
+            if (!user.getUsername().equals("admin") && user.getDateDeleted() == null) list.add(user);
         }
         return list;
     }
@@ -121,14 +119,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(String username, UpdateProfileRequest request) {
         // TODO Auto-generated method stub
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + username));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found User With Id: " + username));
         return getUser(user, request);
     }
 
     @Override
     public void enableUser(long id) {
         // TODO Auto-generated method stub
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + id));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found User With Id: " + id));
         user.setEnabled(!user.isEnabled());
         userRepository.save(user);
     }
@@ -136,7 +134,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(long id) {
         // TODO Auto-generated method stub
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Category With Id: " + id));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found User With Id: " + id));
         user.setEnabled(false);
         user.setDateDeleted(dtf.format(now));
         userRepository.save(user);

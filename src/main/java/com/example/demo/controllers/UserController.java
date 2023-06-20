@@ -33,12 +33,6 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-//    @PutMapping("uploadImage/{username}/{imageId}")
-//    public ResponseEntity<?> setImageForUser(@PathVariable("username") String username, @PathVariable("imageId") long imageId){
-//        User user = userService.setImageForUser(username,imageId);
-//        return ResponseEntity.ok(user);
-//    }
-
     @PutMapping("/update")
     public ResponseEntity<User> updateProfile(@RequestBody UpdateProfileRequest request){
         User user = userService.updateUser(request);

@@ -13,6 +13,8 @@ public interface ImportService {
     List<ImportGoods> getList();
 
     long getImportForChart(String date);
+    List<String> getDatesForChartLine();
+    List<Long> getTotalForChartLine(List<String> dates);
 
     long totalAllImport();
 

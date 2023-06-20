@@ -109,7 +109,7 @@ public class ImageController {
                 BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
                 stream.write(file.getBytes());
                 stream.close();
-                userService.setImageForUser(user,img);
+//                userService.setImageForUser(user,img);
                 img.setUploadedBy(user);
                 imageService.save(img);
                 return ResponseEntity.ok(img);

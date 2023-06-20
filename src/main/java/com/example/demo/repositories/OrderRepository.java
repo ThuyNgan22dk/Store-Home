@@ -14,4 +14,5 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
 
     @Query(value ="Select * from Orders where date_time = :dateTime",nativeQuery = true)
     List<Order> getOrderDay(String dateTime);
+
 }

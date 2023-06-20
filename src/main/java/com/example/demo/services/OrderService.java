@@ -15,6 +15,9 @@ public interface OrderService {
 
     long getOrderForChart(String date);
 
+    List<String> getDatesForChartLine();
+    List<Long> getOrderForChartLine(List<String> dates);
+
     long totalAllOrder();
 
     List<Order> getOrderByUser(String username);
